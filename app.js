@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function createTable(data, type) {
         let table = document.getElementById("data-table"); // Define table here
-        let headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];  // Initialize headers as an empty array
+        let headers;
+        if(type === 'STATUS'){
+            headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
+        } else if(type === 'DB') {
+            headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
+        }
 
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
@@ -49,6 +54,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
+    function searchDB(keyword) {
+        db.collection("DB").get().then((querySnapshot) => {
+            let searchData = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || data.強化Lv.includes(keyword) || data.必要素材.includes(keyword))){
+                    data.id = doc.id; // add the document id to the data
+                    searchData.push(data);
+                }
+            });
+            createTable(searchData.sort((a, b) => a.No - b.No), 'DB'); // sort by "No" column and call createTable
+        });
+    }
+    
+    searchBtn.addEventListener("click", function() {
+        let searchKeyword = document.getElementById("searchInput").value; // Assume that searchInput is the ID of the search input field
+        searchDB(searchKeyword);
+    });
+
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
@@ -74,18 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }).catch(err => console.log(err));
         });
         alert("Saved!");
-    }
-
-    function searchDB() {
-        db.collection("DB").where("強化済みフラグ", "==", 0).get().then((querySnapshot) => {
-            let searchData = [];
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                data.id = doc.id; // add the document id to the data
-                searchData.push(data);
-            });
-            createTable(searchData, 'DB');
-        });
     }
 
     function clearStatus() {

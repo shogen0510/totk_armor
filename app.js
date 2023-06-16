@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // clear existing table content
         table.innerHTML = '';
 
-        // Add table headers
-        let headers = Object.keys(data[0]).filter(key => key !== 'No' && key !== '防具分類2');
+        // Define headers and their order
+        let headers = ['防具分類', '防具', '強化Lv', '強化済みフラグ'];
         let headerRow = document.createElement("tr");
         headers.forEach(header => {
             let th = document.createElement("th");
@@ -45,7 +45,14 @@ document.addEventListener("DOMContentLoaded", function() {
             let tr = document.createElement("tr");
             headers.forEach(header => {
                 let td = document.createElement("td");
-                td.textContent = row[header];
+                if (header === '強化済みフラグ') {
+                    let checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = row[header];
+                    td.appendChild(checkbox);
+                } else {
+                    td.textContent = row[header];
+                }
                 tr.appendChild(td);
             });
             table.appendChild(tr);

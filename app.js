@@ -25,8 +25,14 @@ document.addEventListener("DOMContentLoaded", function() {
         createTable(dbData);
     });
 
+    
     function createTable(data) {
-        // ...
+        let headers = [];  // Initialize headers as an empty array
+        
+        if(data.length > 0) {
+            headers = Object.keys(data[0]); // assuming all objects have same structure
+        }
+    
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
             let tr = document.createElement("tr");
@@ -46,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
+    
     
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");

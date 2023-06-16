@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#app {
+    width: 100%;
+    max-width: 414px; /* iPhone 11 Pro Max width */
+    margin: auto;
+}
+
+input, button {
+    width: 100%;
+    margin: 10px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}

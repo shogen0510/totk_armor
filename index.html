@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>My App</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" id="search" placeholder="検索...">
+        <table id="statusTable"></table>
+        <button id="saveBtn">STATUS SAVE</button>
+        <button id="clearBtn">STATUS CLEAR</button>
+        <table id="dataTable"></table>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>    
+    <script src="app.js"></script>
+</body>
+</html>

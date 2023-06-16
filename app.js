@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
     var db = firebase.firestore();
 
     let dbData = [];
@@ -19,12 +18,18 @@ document.addEventListener("DOMContentLoaded", function() {
     db.collection("STATUS").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             let data = doc.data();
-            data.id = doc.id; // add the document id to the data
+            data.id = doc.id;
             dbData.push(data);
         });
-        createTable(dbData, 'STATUS', 'status-table'); // Here
-    });
 
+        // Ensure that 'status-table' exists in the DOM before attempting to create it
+        if (document.getElementById('status-table')) {
+            createTable(dbData, 'STATUS', 'status-table');
+        } else {
+            console.error("Unable to find an element with the id 'status-table' in the DOM");
+        }
+    });
+    
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId); // Get table by the passed id
         let headers;

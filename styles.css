@@ -7,14 +7,13 @@ body {
 
 #app {
     width: 100%;
-    max-width: 414px; /* iPhone 11 Pro Max width */
     margin: auto;
 }
 
 input[type="checkbox"] {
-    -webkit-appearance: checkbox;  /* チェックボックスのデザインをオーバーライドします */
-    width: 20px;  /* チェックボックスの幅を指定します */
-    height: 20px;  /* チェックボックスの高さを指定します */
+    -webkit-appearance: checkbox;
+    width: 20px;
+    height: 20px;
 }
 
 input, button {
@@ -25,7 +24,6 @@ input, button {
 table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 1125px; /* iPhone 11 Pro's max width */
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -39,9 +37,10 @@ table, th, td {
 
 table th {
     background-color: #f2f2f2;
-  }
+}
 
-  @media screen and (max-width: 1125px) {
+/* Extra small devices (phones) */
+@media only screen and (max-width: 600px) {
     table {
       font-size: 14px;
     }
@@ -50,4 +49,32 @@ table th {
     table td {
       padding: 4px;
     }
-  }
+}
+
+/* Small devices (portrait tablets and large phones) */
+@media only screen and (min-width: 600px) {
+    #app {
+        max-width: 600px;
+    }
+}
+
+/* Medium devices (landscape tablets) */
+@media only screen and (min-width: 768px) {
+    #app {
+        max-width: 768px;
+    }
+}
+
+/* Large devices (laptops/desktops) */
+@media only screen and (min-width: 992px) {
+    #app {
+        max-width: 992px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops) */
+@media only screen and (min-width: 1200px) {
+    #app {
+        max-width: 1200px;
+    }
+}

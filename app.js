@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let table = document.getElementById("data-table");
         // clear existing table content
         table.innerHTML = '';
-
+    
         // Define headers and their order
         let headers = ['防具分類1', '防具', '強化Lv', '強化済みフラグ'];
         let headerRow = document.createElement("tr");
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
             headerRow.appendChild(th);
         });
         table.appendChild(headerRow);
-
+    
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
             let tr = document.createElement("tr");
@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
+                    checkbox.id = row['強化Lv'];  // Assign '防具強化Lv' to checkbox's id
                     td.appendChild(checkbox);
                 } else {
                     td.textContent = row[header];
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
+    
     
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         '強化済みフラグ': checked
                     }, {merge: true});
                 });
-            });
+            }).catch(err => console.log(err));
         });
         alert("保存が成功しました！");
     }    

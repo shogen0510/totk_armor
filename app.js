@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
     function createTable(data) {
+        let table = document.getElementById("data-table"); // Define table here
         let headers = [];  // Initialize headers as an empty array
         
         if(data.length > 0) {
@@ -122,3 +123,10 @@ document.addEventListener("DOMContentLoaded", function() {
         clearStatus();
     });
 });
+この修正で、createTable関数内のtableは正しく定義され、 table.appendChild(tr);も正常に動作するはずです。ただし、テーブル要素の実際のIDが "data-table"であることを確認してください。
+
+
+
+
+
+

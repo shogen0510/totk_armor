@@ -59,6 +59,22 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
+    function saveStatus() {
+        // Fetch all checkboxes
+        let checkboxes = document.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach((checkbox, index) => {
+            // Update the '強化済みフラグ' field in the Firestore DB
+            let enhanced = checkbox.checked;
+            let docId = dbData[index].id; // get the corresponding document id from dbData
+
+            db.collection("DB").doc(docId).update({
+                '強化済みフラグ': enhanced
+            });
+        });
+
+        alert("保存されました！");
+    }
+
     let searchInput = document.getElementById("search");
     let saveBtn = document.getElementById("saveBtn");
     let clearBtn = document.getElementById("clearBtn");
@@ -72,12 +88,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     saveBtn.addEventListener("click", function() {
-        // STATUS SAVEボタンが押されたときの処理をここに書く
-        alert("保存機能は現在利用できません！");
+        // When STATUS SAVE button is clicked, execute the saveStatus function
+        saveStatus();
     });
 
     clearBtn.addEventListener("click", function() {
         // STATUS CLEARボタンが押されたときの処理をここに書く
-        alert("クリア機能は現在利用できません！");
+        // Code for the STATUS CLEAR button goes here...
     });
 });

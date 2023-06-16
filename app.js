@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
-                    checkbox.id = row['強化Lv'].toString();  // convert '強化Lv' to string before assigning to checkbox's id
+                    checkbox.id = row['防具強化Lv'].toString();  // convert '強化Lv' to string before assigning to checkbox's id
                     td.appendChild(checkbox);
                 } else {
                     td.textContent = row[header];
@@ -50,22 +50,47 @@ document.addEventListener("DOMContentLoaded", function() {
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
-            let level = Number(checkbox.getAttribute("id"));  // convert back to number before using as Firestore doc id
-            let checked = checkbox.checked;
-        
-            // Update Firestore
-            db.collection("STATUS").doc(level.toString()).update({
-                '強化済みフラグ': checked
-            }).then(() => {
-                console.log("Document successfully updated!");
-            })
-            .catch((error) => {
-                console.error("Error updating document: ", error);
-            });
-        
-            // ...
+            let level = checkbox.getAttribute("id");
+            let checked = checkbox.checked ? 0 : 1;  // if checked, set 0, else set 1
+    
+            // Update '強化済みフラグ' in all matching STATUS documents
+            db.collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    db.collection("STATUS").doc(doc.id).update({
+                        '強化済みフラグ': checked
+                    });
+                });
+            }).catch(err => console.log(err));
+    
+            // Update '強化済みフラグ' in all matching DB documents
+            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    db.collection("DB").doc(doc.id).update({
+                        '強化済みフラグ': checked
+                    });
+                });
+            }).catch(err => console.log(err));
         });
         alert("保存が成功しました！");
+    }
+
+    function clearStatus() {
+        db.collection("STATUS").get().then(snapshot => {
+            snapshot.forEach(doc => {
+                db.collection("STATUS").doc(doc.id).update({
+                    '強化済みフラグ': 0
+                });
+            });
+        }).catch(err => console.log(err));
+
+        db.collection("DB").get().then(snapshot => {
+            snapshot.forEach(doc => {
+                db.collection("DB").doc(doc.id).update({
+                    '強化済みフラグ': 0
+                });
+            });
+        }).catch(err => console.log(err));
+        alert("全ての強化フラグがクリアされました！");
     }
 
     let searchInput = document.getElementById("search");
@@ -77,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("data-table").innerHTML = '';
 
         // Create a new table with only non-enhanced items
-        createTable(dbData.filter(row => !row.強化済みフラグ));
+        createTable(dbData.filter(row => row.強化済みフラグ !== 1));
     });
 
     saveBtn.addEventListener("click", function() {
@@ -86,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     clearBtn.addEventListener("click", function() {
-        // STATUS CLEARボタンが押されたときの処理をここに書く
-        // Code for the STATUS CLEAR button goes here...
+        // When STATUS CLEAR button is clicked, execute the clearStatus function
+        clearStatus();
     });
 });

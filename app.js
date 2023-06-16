@@ -60,19 +60,27 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     function saveStatus() {
-        // Fetch all checkboxes
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
-        checkboxes.forEach((checkbox, index) => {
-            // Update the '強化済みフラグ' field in the Firestore DB
-            let enhanced = checkbox.checked;
-            let docId = dbData[index].id; // get the corresponding document id from dbData
-
-            db.collection("DB").doc(docId).update({
-                '強化済みフラグ': enhanced
+        checkboxes.forEach(checkbox => {
+            let level = checkbox.getAttribute("id");
+            let checked = checkbox.checked;
+    
+            // Update Firestore
+            db.collection("STATUS").doc(level).set({
+                '強化済みフラグ': checked
+            });
+    
+            // Update the '強化済みフラグ' in all matching DB documents
+            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    db.collection("DB").doc(doc.id).set({
+                        '強化済みフラグ': checked
+                    }, {merge: true});
+                });
             });
         });
-
-        alert("保存されました！");
+        alert("保存が成功しました！");
+    }
     }
 
     let searchInput = document.getElementById("search");

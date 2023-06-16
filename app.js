@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
         createTable(dbData, 'STATUS');
     });
 
-    function createTable(data, type) {
-        let table = document.getElementById("data-table"); // Define table here
+    function createTable(data, type, tableId) {
+        let table = document.getElementById(tableId); // Get table by the passed id
         let headers;
         if(type === 'STATUS'){
             headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     searchData.push(data);
                 }
             });
-            createTable(searchData.sort((a, b) => a.No - b.No), 'DB'); // sort by "No" column and call createTable
+            createTable(searchData.sort((a, b) => a.No - b.No), 'DB', 'search-table'); // Pass the id of the search result table
         });
     }
     
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     rows.push(doc.data());
                 });
                 const filteredRows = filterData(rows, searchValue);
-                createTable(filteredRows, 'STATUS');
+                createTable(filteredRows, 'STATUS', 'status-table'); // Pass the id of the status table
             })
             .catch((error) => {
                 console.error("Error retrieving data from Firestore: ", error);

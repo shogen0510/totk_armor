@@ -67,6 +67,16 @@ document.addEventListener("DOMContentLoaded", function() {
             let level = checkbox.getAttribute("id");
             let checked = checkbox.checked;
     
+            // Update Firestore
+            db.collection("STATUS").doc(level).update({
+                '強化済みフラグ': checked
+            }).then(() => {
+                console.log("Document successfully updated!");
+            })
+            .catch((error) => {
+                console.error("Error updating document: ", error);
+            });
+    
             // Update the '強化済みフラグ' in all matching DB documents
             db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
                 snapshot.forEach(doc => {

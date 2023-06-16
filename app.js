@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
         table.innerHTML = '';
 
         // Define headers and their order
-        let headers = ['防具分類', '防具', '強化Lv', '強化済みフラグ'];
+        let headers = ['防具分類1', '防具', '強化Lv', '強化済みフラグ'];
         let headerRow = document.createElement("tr");
         headers.forEach(header => {
             let th = document.createElement("th");

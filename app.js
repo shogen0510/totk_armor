@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data.id = doc.id; // add the document id to the data
             dbData.push(data);
         });
-        createTable(dbData, 'STATUS');
+        createTable(dbData, 'STATUS', 'status-table'); // Here
     });
 
     function createTable(data, type, tableId) {
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     rows.push(doc.data());
                 });
                 const filteredRows = filterData(rows, searchValue);
-                createTable(filteredRows, 'STATUS', 'status-table'); // Pass the id of the status table
+                createTable(filteredRows, 'STATUS', 'status-table'); // And here
             })
             .catch((error) => {
                 console.error("Error retrieving data from Firestore: ", error);

@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
     searchBtn.addEventListener("click", function(event) {
         event.preventDefault(); // Prevent the form from being submitted normally
         let searchKeyword = document.getElementById("searchInput").value; // Get the search input value
-        fetchData(searchKeyword);
+        searchDB(searchKeyword);
     });
 
     // Fetch data from Firestore

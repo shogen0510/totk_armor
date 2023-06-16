@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
-            let level = checkbox.getAttribute("id");
-            let checked = checkbox.checked ? 0 : 1;  // if checked, set 0, else set 1
+            let level = checkbox.id;
+            let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
     
             // Update '強化済みフラグ' in all matching STATUS documents
             db.collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {

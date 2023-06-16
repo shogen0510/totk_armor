@@ -80,8 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
         alert("保存が成功しました！");
-    }
-    }
+    }    
 
     let searchInput = document.getElementById("search");
     let saveBtn = document.getElementById("saveBtn");

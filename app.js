@@ -14,6 +14,50 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let dbData = [];
 
+    // This function will count the quantities for each item
+    function aggregateMaterialQuantities(data) {
+        let quantities = {};
+
+        data.forEach(row => {
+            if (row.必要素材 in quantities) {
+                quantities[row.必要素材] += row.必要数量;
+            } else {
+                quantities[row.必要素材] = row.必要数量;
+            }
+        });
+
+        return quantities;
+    }
+
+    // This function will create a new table using the material quantities
+    function createQuantityTable(quantities, tableId) {
+        let table = document.getElementById(tableId);
+        if (!table) {
+            console.error("Unable to find an element with the id '" + tableId + "' in the DOM");
+            return;
+        }
+
+        // Clear out any existing rows
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+
+        // Add table rows
+        for (let material in quantities) {
+            let tr = document.createElement("tr");
+
+            let materialTd = document.createElement("td");
+            materialTd.textContent = material;
+            tr.appendChild(materialTd);
+
+            let quantityTd = document.createElement("td");
+            quantityTd.textContent = quantities[material];
+            tr.appendChild(quantityTd);
+
+            table.appendChild(tr);
+        }
+    }
+
     // Get data from Firestore
     db.collection("STATUS").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -29,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Unable to find an element with the id 'status-table' in the DOM");
         }
     });
-    
+
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId); // Get table by the passed id
         let headers;
@@ -65,11 +109,13 @@ document.addEventListener("DOMContentLoaded", function() {
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || data.強化Lv.includes(keyword) || data.必要素材.includes(keyword))){
-                    data.id = doc.id; // add the document id to the data
+                    data.id = doc.id;
                     searchData.push(data);
                 }
             });
-            createTable(searchData.sort((a, b) => a.No - b.No), 'DB', 'search-table'); // Pass the id of the search result table
+            let quantities = aggregateMaterialQuantities(searchData);
+            createQuantityTable(quantities, 'quantity-table');
+            createTable(searchData.sort((a, b) => a.No - b.No), 'DB', 'search-table');
         });
     }
     
@@ -116,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault(); // Prevent the form from being submitted normally
         let searchKeyword = document.getElementById("search").value; // Get the search input value
         searchDB(searchKeyword);
-    });    
+    });   
 
     // Fetch data from Firestore
     function fetchData(searchValue) {

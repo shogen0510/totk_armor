@@ -22,24 +22,19 @@ document.addEventListener("DOMContentLoaded", function() {
             data.id = doc.id; // add the document id to the data
             dbData.push(data);
         });
-        createTable(dbData);
+        createTable(dbData, 'STATUS');
     });
 
-    
-    function createTable(data) {
+    function createTable(data, type) {
         let table = document.getElementById("data-table"); // Define table here
-        let headers = [];  // Initialize headers as an empty array
-        
-        if(data.length > 0) {
-            headers = Object.keys(data[0]); // assuming all objects have same structure
-        }
-    
+        let headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];  // Initialize headers as an empty array
+
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
             let tr = document.createElement("tr");
             headers.forEach(header => {
                 let td = document.createElement("td");
-                if (header === '強化済みフラグ') {
+                if (header === '強化済みフラグ' && type === 'STATUS') {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
@@ -53,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-    
     
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
@@ -79,38 +73,36 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }).catch(err => console.log(err));
         });
-        alert("保存が成功しました！");
+        alert("Saved!");
+    }
+
+    function searchDB() {
+        db.collection("DB").where("強化済みフラグ", "==", 0).get().then((querySnapshot) => {
+            let searchData = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id; // add the document id to the data
+                searchData.push(data);
+            });
+            createTable(searchData, 'DB');
+        });
     }
 
     function clearStatus() {
-        db.collection("STATUS").get().then(snapshot => {
-            snapshot.forEach(doc => {
-                db.collection("STATUS").doc(doc.id).update({
-                    '強化済みフラグ': 0
-                });
-            });
-        }).catch(err => console.log(err));
-
-        db.collection("DB").get().then(snapshot => {
-            snapshot.forEach(doc => {
-                db.collection("DB").doc(doc.id).update({
-                    '強化済みフラグ': 0
-                });
-            });
-        }).catch(err => console.log(err));
-        alert("全ての強化フラグがクリアされました！");
+        let checkboxes = document.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        alert("Cleared!");
     }
 
-    let searchInput = document.getElementById("search");
+    let searchBtn = document.getElementById("searchBtn");
     let saveBtn = document.getElementById("saveBtn");
     let clearBtn = document.getElementById("clearBtn");
 
-    searchInput.addEventListener("input", function() {
-        // Clear existing table
-        document.getElementById("data-table").innerHTML = '';
-
-        // Create a new table with only non-enhanced items
-        createTable(dbData.filter(row => row.強化済みフラグ !== 1));
+    searchBtn.addEventListener("click", function() {
+        // When Search button is clicked, execute the searchDB function
+        searchDB();
     });
 
     saveBtn.addEventListener("click", function() {
@@ -123,10 +115,3 @@ document.addEventListener("DOMContentLoaded", function() {
         clearStatus();
     });
 });
-この修正で、createTable関数内のtableは正しく定義され、 table.appendChild(tr);も正常に動作するはずです。ただし、テーブル要素の実際のIDが "data-table"であることを確認してください。
-
-
-
-
-
-

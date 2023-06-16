@@ -75,14 +75,28 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function createTable(data, type, tableId) {
-        let table = document.getElementById(tableId); // Get table by the passed id
+        let table = document.getElementById(tableId);
         let headers;
         if(type === 'STATUS'){
             headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
         } else if(type === 'DB') {
             headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
         }
-
+    
+        // Clear out any existing rows
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+    
+        // Create table headers
+        let tr = document.createElement("tr");
+        headers.forEach(header => {
+            let th = document.createElement("th");
+            th.textContent = header;
+            tr.appendChild(th);
+        });
+        table.appendChild(tr);
+    
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
             let tr = document.createElement("tr");
@@ -92,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
-                    checkbox.id = row['防具強化Lv'].toString();  // convert '強化Lv' to string before assigning to checkbox's id
+                    checkbox.id = row['防具強化Lv'].toString();
                     td.appendChild(checkbox);
                 } else {
                     td.textContent = row[header];
@@ -113,9 +127,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     searchData.push(data);
                 }
             });
+            searchData.sort((a, b) => a.No - b.No); // Sort searchData based on 'No'
             let quantities = aggregateMaterialQuantities(searchData);
             createQuantityTable(quantities, 'quantity-table');
-            createTable(searchData.sort((a, b) => a.No - b.No), 'DB', 'search-table');
+            createTable(searchData, 'DB', 'search-table');
         });
     }
     

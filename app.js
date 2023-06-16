@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
             createTable(searchData.sort((a, b) => a.No - b.No), 'DB'); // sort by "No" column and call createTable
         });
     }
-
+    
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let clearBtn = document.getElementById("clearBtn");
 
     searchBtn.addEventListener("click", function() {
-        let searchKeyword = document.getElementById("searchInput").value; // Assume that searchInput is the ID of the search input field
+        let searchKeyword = document.getElementById("search").value; // Assume that searchInput is the ID of the search input field
         searchDB(searchKeyword);
     });
 

@@ -26,20 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function createTable(data) {
-        let table = document.getElementById("data-table");
-        // clear existing table content
-        table.innerHTML = '';
-    
-        // Define headers and their order
-        let headers = ['防具分類1', '防具', '強化Lv', '強化済みフラグ'];
-        let headerRow = document.createElement("tr");
-        headers.forEach(header => {
-            let th = document.createElement("th");
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
-    
+        // ...
         // Add table rows
         data.sort((a, b) => a.No - b.No).forEach(row => {
             let tr = document.createElement("tr");
@@ -49,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
-                    checkbox.id = row['強化Lv'];  // Assign '防具強化Lv' to checkbox's id
+                    checkbox.id = row['強化Lv'].toString();  // convert '強化Lv' to string before assigning to checkbox's id
                     td.appendChild(checkbox);
                 } else {
                     td.textContent = row[header];
@@ -60,15 +47,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
-            let level = checkbox.getAttribute("id");
+            let level = Number(checkbox.getAttribute("id"));  // convert back to number before using as Firestore doc id
             let checked = checkbox.checked;
-    
+        
             // Update Firestore
-            db.collection("STATUS").doc(level).update({
+            db.collection("STATUS").doc(level.toString()).update({
                 '強化済みフラグ': checked
             }).then(() => {
                 console.log("Document successfully updated!");
@@ -76,15 +62,8 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch((error) => {
                 console.error("Error updating document: ", error);
             });
-    
-            // Update the '強化済みフラグ' in all matching DB documents
-            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    db.collection("DB").doc(doc.id).update({
-                        '強化済みフラグ': checked
-                    });
-                });
-            }).catch(err => console.log(err));
+        
+            // ...
         });
         alert("保存が成功しました！");
     }

@@ -36,13 +36,13 @@ button {
     width: 100%;
     border: none;
     color: white;
-    background-color: #4CAF50; /* some color */
+    background-color: #067AFE; /* some color */
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #45a049; /* darken color on hover */
+    background-color: #015ABB; /* darken color on hover */
 }
 
 table {

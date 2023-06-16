@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
         table.appendChild(tr);
     
         // Add table rows
-        data.sort((a, b) => a.No - b.No).forEach(row => {
+        data.sort((a, b) => a['No.'] - b['No.']).forEach(row => {
             let tr = document.createElement("tr");
             headers.forEach(header => {
                 let td = document.createElement("td");
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     searchData.push(data);
                 }
             });
-            searchData.sort((a, b) => a.No - b.No); // Sort searchData based on 'No'
+            searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
             let quantities = aggregateMaterialQuantities(searchData);
             createQuantityTable(quantities, 'quantity-table');
             createTable(searchData, 'DB', 'search-table');

@@ -107,10 +107,30 @@ document.addEventListener("DOMContentLoaded", function() {
     let saveBtn = document.getElementById("saveBtn");
     let clearBtn = document.getElementById("clearBtn");
 
-    searchBtn.addEventListener("click", function() {
-        let searchKeyword = document.getElementById("search").value; // Assume that searchInput is the ID of the search input field
-        searchDB(searchKeyword);
+    searchBtn.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the form from being submitted normally
+        let searchKeyword = document.getElementById("searchInput").value; // Get the search input value
+        fetchData(searchKeyword);
     });
+
+    // Fetch data from Firestore
+    function fetchData(searchValue) {
+        db.collection("DB")
+            .get()
+            .then((querySnapshot) => {
+                let rows = [];
+                querySnapshot.forEach((doc) => {
+                    // Push the document data into the rows array
+                    // Adjust the data structure if necessary
+                    rows.push(doc.data());
+                });
+                const filteredRows = filterData(rows, searchValue);
+                createTable(filteredRows, 'STATUS');
+            })
+            .catch((error) => {
+                console.error("Error retrieving data from Firestore: ", error);
+            });
+    }
 
     saveBtn.addEventListener("click", function() {
         // When STATUS SAVE button is clicked, execute the saveStatus function

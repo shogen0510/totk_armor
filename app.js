@@ -150,5 +150,6 @@ document.addEventListener("DOMContentLoaded", function() {
     clearBtn.addEventListener("click", function() {
         // STATUS CLEARボタンが押されたときの処理をここに書く
         clearStatus();
+        alert("チェックをクリアしました！");
     });
 });

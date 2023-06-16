@@ -67,11 +67,6 @@ document.addEventListener("DOMContentLoaded", function() {
             createTable(searchData.sort((a, b) => a.No - b.No), 'DB'); // sort by "No" column and call createTable
         });
     }
-    
-    searchBtn.addEventListener("click", function() {
-        let searchKeyword = document.getElementById("searchInput").value; // Assume that searchInput is the ID of the search input field
-        searchDB(searchKeyword);
-    });
 
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
@@ -113,8 +108,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let clearBtn = document.getElementById("clearBtn");
 
     searchBtn.addEventListener("click", function() {
-        // When Search button is clicked, execute the searchDB function
-        searchDB();
+        let searchKeyword = document.getElementById("searchInput").value; // Assume that searchInput is the ID of the search input field
+        searchDB(searchKeyword);
     });
 
     saveBtn.addEventListener("click", function() {

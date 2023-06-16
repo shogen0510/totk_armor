@@ -109,9 +109,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     searchBtn.addEventListener("click", function(event) {
         event.preventDefault(); // Prevent the form from being submitted normally
-        let searchKeyword = document.getElementById("searchInput").value; // Get the search input value
+        let searchKeyword = document.getElementById("search").value; // Get the search input value
         searchDB(searchKeyword);
-    });
+    });    
 
     // Fetch data from Firestore
     function fetchData(searchValue) {

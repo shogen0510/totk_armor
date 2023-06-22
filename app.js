@@ -22,25 +22,75 @@ document.addEventListener("DOMContentLoaded", function() {
     
     function fetchLinks() {
         // Fetch links and unique values from Firestore
-        db.collection("armor").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                links[data.name] = data.URL;
-                if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
-            });
-        });
-    
-        db.collection("materials").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                links[data.name] = data.URL;
-                if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
-            });
-        });
+        // Now we return the promise here
+        return Promise.all([
+            db.collection("armor").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    links[data.name] = data.URL;
+                    if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
+                });
+            }),
+            db.collection("materials").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    links[data.name] = data.URL;
+                    if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
+                });
+            })
+        ]);
     }
 
     // Fetch links
-    fetchLinks();
+    fetchLinks().then(() => {
+        // When all data are fetched, then create dropdowns
+        // Add filtering option to the search-table and quantity-table
+        let searchTableFilter = document.createElement("select");
+        let quantityTableFilter = document.createElement("select");
+
+        let option = document.createElement("option");
+        option.text = "Select an option";
+        searchTableFilter.add(option);
+        quantityTableFilter.add(option.cloneNode(true));
+
+        ["防具", "防具分類1", "強化Lv", "必要素材"].forEach(header => {
+            uniqueValues[header].forEach(value => {
+                let option = document.createElement("option");
+                option.text = value;
+                searchTableFilter.add(option);
+                quantityTableFilter.add(option.cloneNode(true));
+            });
+        });
+
+        document.getElementById("search-table").before(searchTableFilter);
+        document.getElementById("quantity-table").before(quantityTableFilter);
+
+        searchTableFilter.addEventListener("change", function() {
+            let selected = this.value;
+            let rows = document.querySelectorAll("#search-table tr");
+            rows.forEach(row => {
+                let tds = Array.from(row.querySelectorAll("td"));
+                if (tds.some(td => td.textContent === selected)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        quantityTableFilter.addEventListener("change", function() {
+            let selected = this.value;
+            let rows = document.querySelectorAll("#quantity-table tr");
+            rows.forEach(row => {
+                let tds = Array.from(row.querySelectorAll("td"));
+                if (tds.some(td => td.textContent === selected)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
 
     let dbData = [];
 
@@ -154,55 +204,6 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-    
-    // Add filtering option to the search-table and quantity-table
-    let searchTableFilter = document.createElement("select");
-    let quantityTableFilter = document.createElement("select");
-
-    let option = document.createElement("option");
-    option.text = "Select an option";
-    searchTableFilter.add(option);
-    quantityTableFilter.add(option.cloneNode(true));
-
-    ["防具", "防具分類1", "強化Lv", "必要素材"].forEach(header => {
-        uniqueValues[header].forEach(value => {
-            let option = document.createElement("option");
-            option.text = value;
-            searchTableFilter.add(option);
-            quantityTableFilter.add(option.cloneNode(true));
-        });
-    });
-
-    document.getElementById("search-table").before(searchTableFilter);
-    document.getElementById("quantity-table").before(quantityTableFilter);
-
-
-    searchTableFilter.addEventListener("change", function() {
-        let selected = this.value;
-        let rows = document.querySelectorAll("#search-table tr");
-        rows.forEach(row => {
-            let td = row.querySelector("td:first-child");
-            if (td && td.textContent !== selected) {
-                row.style.display = "none";
-            } else {
-                row.style.display = "";
-            }
-        });
-    });
-
-    quantityTableFilter.addEventListener("change", function() {
-        let selected = this.value;
-        let rows = document.querySelectorAll("#quantity-table tr");
-        rows.forEach(row => {
-            let td = row.querySelector("td:first-child");
-            if (td && td.textContent !== selected) {
-                row.style.display = "none";
-            } else {
-                row.style.display = "";
-            }
-        });
-    });
-
     
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {

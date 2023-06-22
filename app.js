@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // フィルター用のオブジェクトを作成します
         let filters = {};
         headers.forEach(header => {
-            filters[header] = new Set();
+            filters[header] = new Set(data.map(row => row[header]));
             filters[header].value = "All";  // デフォルトのフィルタ値を設定
         });
     
@@ -266,29 +266,26 @@ document.addEventListener("DOMContentLoaded", function() {
             th.textContent = header;
     
             // フィルター用の選択肢を追加します
-            let filterSelect = document.createElement("select");
-            filterSelect.innerHTML = '<option value="All">All</option>';
-            Array.from(filters[header]).forEach(value => {
-                let option = document.createElement("option");
-                option.value = value;
-                option.text = value;
-                filterSelect.appendChild(option);
-            });
-            filterSelect.value = filters[header].value;  // 現在のフィルタ値を設定
-            filterSelect.onchange = function() {
-                filters[header].value = this.value;
-                createTable(data, type, tableId); // 表を更新します
-            };
-            th.appendChild(filterSelect);
-    
-            headerRow.appendChild(th);
+        filters.forEach(filter => {
+            let option = document.createElement("option");
+            option.value = filter;
+            option.text = filter;
+            filterSelect.appendChild(option);
         });
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-    
+        filterSelect.value = filter;  // 現在のフィルタ値を設定
+        filterSelect.onchange = function() {
+            filter = this.value;
+            // フィルター適用のために再度データをクリアし再構築します
+            while (table.firstChild) {
+                table.removeChild(table.firstChild);
+            }
+            createFilteredTable(filteredData, headers, table);  // 表を更新します
+        };
+        th.appendChild(filterSelect);
+
         // フィルターされたデータで表を作成します
         createFilteredTable(filteredData, headers, table);
-    }
+        }
 
     // フィルターされたデータで表を作成する関数を作成します
     function createFilteredTable(data, headers, table) {

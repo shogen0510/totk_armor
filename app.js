@@ -104,12 +104,12 @@ document.addEventListener("DOMContentLoaded", function() {
         } else if(type === 'DB') {
             headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
         }
-    
+
         // Clear out any existing rows
         while (table.firstChild) {
             table.removeChild(table.firstChild);
         }
-    
+
         // Create table headers
         let thead = document.createElement("thead");
         let headerRow = document.createElement("tr");
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-    
+
         // Add table rows
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {
             let tr = document.createElement("tr");
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-
+    
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {
             let searchData = [];
@@ -205,28 +205,16 @@ document.addEventListener("DOMContentLoaded", function() {
     searchBtn.addEventListener("click", function(event) {
         event.preventDefault(); // Prevent the form from being submitted normally
         let searchKeyword = document.getElementById("search").value; // Get the search input value
-        if(searchKeyword){
-            searchDB(searchKeyword);
-        }else{
-            console.error("Search keyword is empty");
-        }
+        searchDB(searchKeyword);
+    });   
+
+    saveBtn.addEventListener("click", function() {
+        // When STATUS SAVE button is clicked, execute the saveStatus function
+        saveStatus();
     });
 
-    function searchDB(keyword) {
-        db.collection("DB").get().then((querySnapshot) => {
-            let searchData = [];
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || String(data.強化Lv).includes(keyword) || data.必要素材.includes(keyword))){
-                    data.id = doc.id;
-                    searchData.push(data);
-                }
-            });
-            searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
-            let quantities = aggregateMaterialQuantities(searchData);
-            createQuantityTable(quantities, 'quantity-table');
-            createTable(searchData, 'DB', 'search-table');
-        }).catch((error) => {
-            console.error("Error retrieving data from Firestore: ", error);
-        });
-    }
+    clearBtn.addEventListener("click", function() {
+        // When STATUS CLEAR button is clicked, execute the clearStatus function
+        clearStatus();
+    });
+});

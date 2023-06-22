@@ -217,4 +217,31 @@ document.addEventListener("DOMContentLoaded", function() {
         // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
+
+    // フィルター機能を適用する関数を定義します
+    function applyFilter() {
+        // フィルターテキストを取得します
+        let filterText = document.getElementById('filter-input').value.toLowerCase();
+
+        // テーブルを取得します
+        let table = document.getElementById('search-table');
+
+        // すべてのテーブル行をループします
+        for (let i = 1; i < table.rows.length; i++) { // ヘッダーを除くために1から始めます
+            let row = table.rows[i];
+            let rowText = row.textContent.toLowerCase();
+
+            // 行のテキストがフィルターテキストを含まない場合、その行を非表示にします
+            if (!rowText.includes(filterText)) {
+                row.style.display = 'none';
+            } else {
+                row.style.display = '';
+            }
+        }
+    }
+
+    // フィルターボタンにイベントリスナーを追加します
+    document.getElementById('filter-btn').addEventListener('click', applyFilter);
+
+    
 });

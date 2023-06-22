@@ -146,6 +146,52 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
+    // Add filtering option to the search-table and quantity-table
+    let searchTableFilter = document.createElement("select");
+    let quantityTableFilter = document.createElement("select");
+
+    let option = document.createElement("option");
+    option.text = "Select an option";
+    searchTableFilter.add(option);
+    quantityTableFilter.add(option.cloneNode(true));
+
+    ["防具", "防具分類1", "強化Lv", "必要素材"].forEach(header => {
+        let option = document.createElement("option");
+        option.text = header;
+        searchTableFilter.add(option);
+        quantityTableFilter.add(option.cloneNode(true));
+    });
+
+    document.getElementById("search-table").before(searchTableFilter);
+    document.getElementById("quantity-table").before(quantityTableFilter);
+
+    searchTableFilter.addEventListener("change", function() {
+        let selected = this.value;
+        let rows = document.querySelectorAll("#search-table tr");
+        rows.forEach(row => {
+            let td = row.querySelector("td:first-child");
+            if (td && td.textContent !== selected) {
+                row.style.display = "none";
+            } else {
+                row.style.display = "";
+            }
+        });
+    });
+
+    quantityTableFilter.addEventListener("change", function() {
+        let selected = this.value;
+        let rows = document.querySelectorAll("#quantity-table tr");
+        rows.forEach(row => {
+            let td = row.querySelector("td:first-child");
+            if (td && td.textContent !== selected) {
+                row.style.display = "none";
+            } else {
+                row.style.display = "";
+            }
+        });
+    });
+
+    
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {
             let searchData = [];

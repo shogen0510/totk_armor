@@ -205,16 +205,28 @@ document.addEventListener("DOMContentLoaded", function() {
     searchBtn.addEventListener("click", function(event) {
         event.preventDefault(); // Prevent the form from being submitted normally
         let searchKeyword = document.getElementById("search").value; // Get the search input value
-        searchDB(searchKeyword);
-    });   
-
-    saveBtn.addEventListener("click", function() {
-        // When STATUS SAVE button is clicked, execute the saveStatus function
-        saveStatus();
+        if(searchKeyword){
+            searchDB(searchKeyword);
+        }else{
+            console.error("Search keyword is empty");
+        }
     });
 
-    clearBtn.addEventListener("click", function() {
-        // When STATUS CLEAR button is clicked, execute the clearStatus function
-        clearStatus();
-    });
-});
+    function searchDB(keyword) {
+        db.collection("DB").get().then((querySnapshot) => {
+            let searchData = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || String(data.強化Lv).includes(keyword) || data.必要素材.includes(keyword))){
+                    data.id = doc.id;
+                    searchData.push(data);
+                }
+            });
+            searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
+            let quantities = aggregateMaterialQuantities(searchData);
+            createQuantityTable(quantities, 'quantity-table');
+            createTable(searchData, 'DB', 'search-table');
+        }).catch((error) => {
+            console.error("Error retrieving data from Firestore: ", error);
+        });
+    }

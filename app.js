@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-
+    
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {
             let searchData = [];
@@ -217,88 +217,4 @@ document.addEventListener("DOMContentLoaded", function() {
         // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
-
-    // 表を生成する関数をオーバーライドします
-    function createTable(data, type, tableId) {
-        let table = document.getElementById(tableId);
-        let headers;
-        if(type === 'STATUS'){
-            headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
-        } else if(type === 'DB') {
-            headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
-        }
-    
-        // Clear out any existing rows
-        while (table.firstChild) {
-            table.removeChild(table.firstChild);
-        }
-    
-        // フィルター用のオブジェクトを作成します
-        let filters = {};
-        headers.forEach(header => {
-            filters[header] = new Set(data.map(row => row[header]));
-            filters[header].value = "All";  // デフォルトのフィルタ値を設定
-        });
-    
-        // フィルターを適用します
-        let filteredData = data.filter(row => {
-            for (let header in filters) {
-                let filterValue = filters[header].value;
-                if (filterValue !== "All" && row[header] !== filterValue) {
-                    return false;
-                }
-            }
-            return true;
-        });
-    
-        // フィルター用の選択肢を更新します
-        filteredData.forEach(row => {
-            for (let header in filters) {
-                filters[header].add(row[header]);
-            }
-        });
-    
-        // Create table headers
-        let thead = document.createElement("thead");
-        let headerRow = document.createElement("tr");
-        headers.forEach(header => {
-            let th = document.createElement("th");
-            th.textContent = header;
-    
-            // フィルター用の選択肢を追加します
-        filters.forEach(filter => {
-            let option = document.createElement("option");
-            option.value = filter;
-            option.text = filter;
-            filterSelect.appendChild(option);
-        });
-        filterSelect.value = filter;  // 現在のフィルタ値を設定
-        filterSelect.onchange = function() {
-            filter = this.value;
-            // フィルター適用のために再度データをクリアし再構築します
-            while (table.firstChild) {
-                table.removeChild(table.firstChild);
-            }
-            createFilteredTable(filteredData, headers, table);  // 表を更新します
-        };
-        th.appendChild(filterSelect);
-
-        // フィルターされたデータで表を作成します
-        createFilteredTable(filteredData, headers, table);
-        }
-
-    // フィルターされたデータで表を作成する関数を作成します
-    function createFilteredTable(data, headers, table) {
-        let tbody = document.createElement("tbody");
-        data.forEach(row => {
-            let tr = document.createElement("tr");
-            headers.forEach(header => {
-                let td = document.createElement("td");
-                td.textContent = row[header];
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-    }
 });

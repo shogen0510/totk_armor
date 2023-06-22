@@ -8,9 +8,32 @@ document.addEventListener("DOMContentLoaded", function() {
         appId: "1:894405393564:web:c385d9191504b1ae108159"
     };
 
+
+    let links = {};
+
+    // Fetch links from Firestore
+    function fetchLinks() {
+        db.collection("armor").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                links[data.name] = data.URL;
+            });
+        });
+
+        db.collection("materials").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                links[data.name] = data.URL;
+            });
+        });
+    }
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
+
+    // Fetch links
+    fetchLinks();
 
     let dbData = [];
 
@@ -43,19 +66,28 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Add table rows
-        for (let material in quantities) {
+        data.sort((a, b) => a['No'] - b['No']).forEach(row => {
             let tr = document.createElement("tr");
-
-            let materialTd = document.createElement("td");
-            materialTd.textContent = material;
-            tr.appendChild(materialTd);
-
-            let quantityTd = document.createElement("td");
-            quantityTd.textContent = quantities[material];
-            tr.appendChild(quantityTd);
-
+            headers.forEach(header => {
+                let td = document.createElement("td");
+                if (header === '強化済みフラグ' && type === 'STATUS') {
+                    let checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = row[header];
+                    checkbox.id = row['防具強化Lv'].toString();
+                    td.appendChild(checkbox);
+                } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
+                    let link = document.createElement("a");
+                    link.textContent = row[header];
+                    link.href = links[row[header]]; // Link from Firestore
+                    td.appendChild(link);
+                } else {
+                    td.textContent = row[header];
+                }
+                tr.appendChild(td);
+            });
             table.appendChild(tr);
-        }
+        });
     }
 
     // Get data from Firestore
@@ -199,12 +231,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     saveBtn.addEventListener("click", function() {
-        // When STATUS SAVE button is clicked, execute the saveStatus function
+        // When SAVE button is clicked, execute the saveStatus function
         saveStatus();
     });
 
     clearBtn.addEventListener("click", function() {
-        // When STATUS CLEAR button is clicked, execute the clearStatus function
+        // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
 });

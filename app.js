@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-    
+
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {
             let searchData = [];
@@ -209,12 +209,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });   
 
     saveBtn.addEventListener("click", function() {
-        // When STATUS SAVE button is clicked, execute the saveStatus function
+        // When SAVE button is clicked, execute the saveStatus function
         saveStatus();
     });
 
     clearBtn.addEventListener("click", function() {
-        // When STATUS CLEAR button is clicked, execute the clearStatus function
+        // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
 });

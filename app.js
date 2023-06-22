@@ -218,30 +218,88 @@ document.addEventListener("DOMContentLoaded", function() {
         clearStatus();
     });
 
-    // フィルター機能を適用する関数を定義します
-    function applyFilter() {
-        // フィルターテキストを取得します
-        let filterText = document.getElementById('filter-input').value.toLowerCase();
-
-        // テーブルを取得します
-        let table = document.getElementById('search-table');
-
-        // すべてのテーブル行をループします
-        for (let i = 1; i < table.rows.length; i++) { // ヘッダーを除くために1から始めます
-            let row = table.rows[i];
-            let rowText = row.textContent.toLowerCase();
-
-            // 行のテキストがフィルターテキストを含まない場合、その行を非表示にします
-            if (!rowText.includes(filterText)) {
-                row.style.display = 'none';
-            } else {
-                row.style.display = '';
-            }
+    // 表を生成する関数をオーバーライドします
+    function createTable(data, type, tableId) {
+        let table = document.getElementById(tableId);
+        let headers;
+        if(type === 'STATUS'){
+            headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
+        } else if(type === 'DB') {
+            headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
         }
+
+        // Clear out any existing rows
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+
+        // フィルター用のオブジェクトを作成します
+        let filters = {};
+        headers.forEach(header => {
+            filters[header] = new Set();
+        });
+
+        // フィルターを適用します
+        let filteredData = data.filter(row => {
+            for (let header in filters) {
+                let filterValue = filters[header].value;
+                if (filterValue !== "All" && row[header] !== filterValue) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        // フィルター用の選択肢を更新します
+        filteredData.forEach(row => {
+            for (let header in filters) {
+                filters[header].add(row[header]);
+            }
+        });
+
+        // Create table headers
+        let thead = document.createElement("thead");
+        let headerRow = document.createElement("tr");
+        headers.forEach(header => {
+            let th = document.createElement("th");
+            th.textContent = header;
+
+            // フィルター用の選択肢を追加します
+            let filterSelect = document.createElement("select");
+            filterSelect.innerHTML = '<option value="All">All</option>';
+            Array.from(filters[header]).forEach(value => {
+                let option = document.createElement("option");
+                option.value = value;
+                option.text = value;
+                filterSelect.appendChild(option);
+            });
+            filterSelect.onchange = function() {
+                filters[header].value = this.value;
+                createTable(data, type, tableId); // 表を更新します
+            };
+            th.appendChild(filterSelect);
+
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // フィルターされたデータで表を作成します
+        createFilteredTable(filteredData, headers, table);
     }
 
-    // フィルターボタンにイベントリスナーを追加します
-    document.getElementById('filter-btn').addEventListener('click', applyFilter);
-
-    
+    // フィルターされたデータで表を作成する関数を作成します
+    function createFilteredTable(data, headers, table) {
+        let tbody = document.createElement("tbody");
+        data.forEach(row => {
+            let tr = document.createElement("tr");
+            headers.forEach(header => {
+                let td = document.createElement("td");
+                td.textContent = row[header];
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+    }
 });

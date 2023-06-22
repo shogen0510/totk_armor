@@ -13,20 +13,28 @@ document.addEventListener("DOMContentLoaded", function() {
     var db = firebase.firestore();
 
     let links = {};
-
-    // Fetch links from Firestore
+    let uniqueValues = {
+        "防具": new Set(),
+        "防具分類1": new Set(),
+        "強化Lv": new Set(),
+        "必要素材": new Set()
+    };
+    
     function fetchLinks() {
+        // Fetch links and unique values from Firestore
         db.collection("armor").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 links[data.name] = data.URL;
+                if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
             });
         });
-
+    
         db.collection("materials").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 links[data.name] = data.URL;
+                if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
             });
         });
     }
@@ -125,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {
             let tr = document.createElement("tr");
             headers.forEach(header => {
+                if (row[header] in uniqueValues) uniqueValues[row[header]].add(row[header]);
                 let td = document.createElement("td");
                 if (header === '強化済みフラグ' && type === 'STATUS') {
                     let checkbox = document.createElement("input");
@@ -156,14 +165,17 @@ document.addEventListener("DOMContentLoaded", function() {
     quantityTableFilter.add(option.cloneNode(true));
 
     ["防具", "防具分類1", "強化Lv", "必要素材"].forEach(header => {
-        let option = document.createElement("option");
-        option.text = header;
-        searchTableFilter.add(option);
-        quantityTableFilter.add(option.cloneNode(true));
+        uniqueValues[header].forEach(value => {
+            let option = document.createElement("option");
+            option.text = value;
+            searchTableFilter.add(option);
+            quantityTableFilter.add(option.cloneNode(true));
+        });
     });
 
     document.getElementById("search-table").before(searchTableFilter);
     document.getElementById("quantity-table").before(quantityTableFilter);
+
 
     searchTableFilter.addEventListener("change", function() {
         let selected = this.value;

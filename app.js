@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 querySnapshot.forEach((doc) => {
                     let data = doc.data();
                     links[data.name] = data.URL;
-                    if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
+                    if ("防具" in uniqueValues) uniqueValues["防具"].add(data.name);
                 });
             }),
             db.collection("materials").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     let data = doc.data();
                     links[data.name] = data.URL;
-                    if (data.name in uniqueValues) uniqueValues[data.name].add(data.name);
+                    if ("必要素材" in uniqueValues) uniqueValues["必要素材"].add(data.name);
                 });
             })
         ]);
@@ -209,12 +209,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-        
+
         // Add table rows
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {
             let tr = document.createElement("tr");
             headers.forEach(header => {
-                if (row[header] in uniqueValues) uniqueValues[row[header]].add(row[header]);
                 let td = document.createElement("td");
                 if (header === '強化済みフラグ' && type === 'STATUS') {
                     let checkbox = document.createElement("input");

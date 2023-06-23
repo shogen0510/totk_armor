@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 select.addEventListener("change", function() {
                     let selected = this.value;
-                    let rows = Array.from(table.querySelectorAll("tr"));
+                    let rows = Array.from(table.querySelectorAll("tbody tr")); // Select rows in tbody only
                     rows.forEach(row => {
                         let tds = Array.from(row.querySelectorAll("td"));
                         if (tds.some(td => td.textContent === selected)) {

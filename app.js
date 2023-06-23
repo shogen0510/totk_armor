@@ -13,84 +13,26 @@ document.addEventListener("DOMContentLoaded", function() {
     var db = firebase.firestore();
 
     let links = {};
-    let uniqueValues = {
-        "防具": new Set(),
-        "防具分類1": new Set(),
-        "強化Lv": new Set(),
-        "必要素材": new Set()
-    };
-    
+
+    // Fetch links from Firestore
     function fetchLinks() {
-        // Fetch links and unique values from Firestore
-        // Now we return the promise here
-        return Promise.all([
-            db.collection("armor").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    links[data.name] = data.URL;
-                    if ("防具" in uniqueValues) uniqueValues["防具"].add(data.name);
-                });
-            }),
-            db.collection("materials").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    links[data.name] = data.URL;
-                    if ("必要素材" in uniqueValues) uniqueValues["必要素材"].add(data.name);
-                });
-            })
-        ]);
+        db.collection("armor").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                links[data.name] = data.URL;
+            });
+        });
+
+        db.collection("materials").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                links[data.name] = data.URL;
+            });
+        });
     }
 
     // Fetch links
-    fetchLinks().then(() => {
-        // When all data are fetched, then create dropdowns
-        // Add filtering option to the search-table and quantity-table
-        let searchTableFilter = document.createElement("select");
-        let quantityTableFilter = document.createElement("select");
-
-        let option = document.createElement("option");
-        option.text = "Select an option";
-        searchTableFilter.add(option);
-        quantityTableFilter.add(option.cloneNode(true));
-
-        ["防具", "防具分類1", "強化Lv", "必要素材"].forEach(header => {
-            uniqueValues[header].forEach(value => {
-                let option = document.createElement("option");
-                option.text = value;
-                searchTableFilter.add(option);
-                quantityTableFilter.add(option.cloneNode(true));
-            });
-        });
-
-        document.getElementById("search-table").before(searchTableFilter);
-        document.getElementById("quantity-table").before(quantityTableFilter);
-
-        searchTableFilter.addEventListener("change", function() {
-            let selected = this.value;
-            let rows = document.querySelectorAll("#search-table tbody tr");  // Select rows in tbody only
-            rows.forEach(row => {
-                let tds = Array.from(row.querySelectorAll("td"));
-                if (tds.some(td => td.textContent === selected)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-        
-        quantityTableFilter.addEventListener("change", function() {
-            let selected = this.value;
-            let rows = document.querySelectorAll("#quantity-table tbody tr");  // Select rows in tbody only
-            rows.forEach(row => {
-                let tds = Array.from(row.querySelectorAll("td"));
-                if (tds.some(td => td.textContent === selected)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-    });
+    fetchLinks();
 
     let dbData = [];
 
@@ -169,43 +111,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Create table headers
-        // Create table headers
         let thead = document.createElement("thead");
         let headerRow = document.createElement("tr");
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
-            let select = document.createElement("select");
-
-            let option = document.createElement("option");
-            option.text = "Select an option";
-            select.add(option);
-
-            uniqueValues[header].forEach(value => {
-                let option = document.createElement("option");
-                option.text = value;
-                select.add(option);
-            });
-
-            select.addEventListener("change", function() {
-                let selected = this.value;
-                let rows = Array.from(table.querySelectorAll("tbody tr")); // Select rows in tbody only
-                rows.forEach(row => {
-                    let tds = Array.from(row.querySelectorAll("td"));
-                    if (tds.some(td => td.textContent === selected)) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                });
-            });
-
-            th.appendChild(select);
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-
 
         // Add table rows
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {
@@ -231,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-    
+
     function searchDB(keyword) {
         db.collection("DB").get().then((querySnapshot) => {
             let searchData = [];
@@ -240,12 +154,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || data.強化Lv.includes(keyword) || data.必要素材.includes(keyword))){
                     data.id = doc.id;
                     searchData.push(data);
-                    
-                    // Add unique values for dropdown
-                    if ("防具" in uniqueValues) uniqueValues["防具"].add(data.防具);
-                    if ("防具分類1" in uniqueValues) uniqueValues["防具分類1"].add(data.防具分類1);
-                    if ("強化Lv" in uniqueValues) uniqueValues["強化Lv"].add(data.強化Lv);
-                    if ("必要素材" in uniqueValues) uniqueValues["必要素材"].add(data.必要素材);
                 }
             });
             searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'

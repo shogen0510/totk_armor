@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         searchTableFilter.addEventListener("change", function() {
             let selected = this.value;
-            let rows = document.querySelectorAll("#search-table tr");
+            let rows = document.querySelectorAll("#search-table tbody tr");  // Select rows in tbody only
             rows.forEach(row => {
                 let tds = Array.from(row.querySelectorAll("td"));
                 if (tds.some(td => td.textContent === selected)) {
@@ -77,10 +77,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         });
-
+        
         quantityTableFilter.addEventListener("change", function() {
             let selected = this.value;
-            let rows = document.querySelectorAll("#quantity-table tr");
+            let rows = document.querySelectorAll("#quantity-table tbody tr");  // Select rows in tbody only
             rows.forEach(row => {
                 let tds = Array.from(row.querySelectorAll("td"));
                 if (tds.some(td => td.textContent === selected)) {

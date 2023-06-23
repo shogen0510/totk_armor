@@ -75,6 +75,12 @@ table th {
     }
 }
 
+a {
+    color: black; /* リンクの色を黒に変更 */
+    text-decoration: none; /* 下線を削除 */
+    font-weight: bold; /* 太字に変更 */
+}
+
 /* Small devices (portrait tablets and large phones) */
 @media only screen and (min-width: 600px) {
     #app {

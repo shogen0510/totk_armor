@@ -198,15 +198,15 @@ document.addEventListener("DOMContentLoaded", function() {
         alert("Cleared!");
     }
 
-    let searchBtn = document.getElementById("searchBtn");
+    let searchForm = document.getElementById("searchForm");
     let saveBtn = document.getElementById("saveBtn");
     let clearBtn = document.getElementById("clearBtn");
 
-    searchBtn.addEventListener("click", function(event) {
+    searchForm.addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the form from being submitted normally
         let searchKeyword = document.getElementById("search").value; // Get the search input value
         searchDB(searchKeyword);
-    });   
+    });  
 
     saveBtn.addEventListener("click", function() {
         // When SAVE button is clicked, execute the saveStatus function

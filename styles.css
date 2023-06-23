@@ -10,6 +10,18 @@ body {
     background-color: #f3f3f3;
 }
 
+#searchForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#searchInput, #searchForm input[type="submit"] {
+    margin: 5px;
+    padding: 10px;
+    font-size: 18px;
+}
+
 #app {
     width: 100%;
     padding: 10px; /* add some padding to prevent content sticking to the edges */

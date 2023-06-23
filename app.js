@@ -174,6 +174,36 @@ document.addEventListener("DOMContentLoaded", function() {
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
+
+            if (header in uniqueValues) {
+                let select = document.createElement("select");
+
+                let option = document.createElement("option");
+                option.text = "Select an option";
+                select.add(option);
+
+                uniqueValues[header].forEach(value => {
+                    let option = document.createElement("option");
+                    option.text = value;
+                    select.add(option);
+                });
+
+                select.addEventListener("change", function() {
+                    let selected = this.value;
+                    let rows = Array.from(table.querySelectorAll("tr"));
+                    rows.forEach(row => {
+                        let tds = Array.from(row.querySelectorAll("td"));
+                        if (tds.some(td => td.textContent === selected)) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                });
+
+                th.appendChild(select);
+            }
+
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);

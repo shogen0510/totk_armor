@@ -14,12 +14,14 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    height: 40px;
 }
 
 #searchInput, #searchForm input[type="submit"] {
     margin: 5px;
     padding: 5px;
     font-size: 18px;
+    height: 40px;
 }
 
 #app {

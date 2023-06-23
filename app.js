@@ -169,46 +169,43 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Create table headers
+        // Create table headers
         let thead = document.createElement("thead");
         let headerRow = document.createElement("tr");
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
+            let select = document.createElement("select");
 
-            // Add pulldown only to "search-table" and "quantity-table"
-            if ((tableId === "search-table" || tableId === "quantity-table") && header in uniqueValues) {
-                let select = document.createElement("select");
+            let option = document.createElement("option");
+            option.text = "Select an option";
+            select.add(option);
 
+            uniqueValues[header].forEach(value => {
                 let option = document.createElement("option");
-                option.text = "Select an option";
+                option.text = value;
                 select.add(option);
+            });
 
-                uniqueValues[header].forEach(value => {
-                    let option = document.createElement("option");
-                    option.text = value;
-                    select.add(option);
+            select.addEventListener("change", function() {
+                let selected = this.value;
+                let rows = Array.from(table.querySelectorAll("tbody tr")); // Select rows in tbody only
+                rows.forEach(row => {
+                    let tds = Array.from(row.querySelectorAll("td"));
+                    if (tds.some(td => td.textContent === selected)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
                 });
+            });
 
-                select.addEventListener("change", function() {
-                    let selected = this.value;
-                    let rows = Array.from(table.querySelectorAll("tbody tr")); // Select rows in tbody only
-                    rows.forEach(row => {
-                        let tds = Array.from(row.querySelectorAll("td"));
-                        if (tds.some(td => td.textContent === selected)) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-                });
-
-                th.appendChild(select);
-            }
-
+            th.appendChild(select);
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
+
 
         // Add table rows
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {

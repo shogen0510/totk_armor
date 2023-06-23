@@ -243,6 +243,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 if(data.強化済みフラグ === 0 && (data.防具.includes(keyword) || data.防具分類1.includes(keyword) || data.強化Lv.includes(keyword) || data.必要素材.includes(keyword))){
                     data.id = doc.id;
                     searchData.push(data);
+                    
+                    // Add unique values for dropdown
+                    if ("防具" in uniqueValues) uniqueValues["防具"].add(data.防具);
+                    if ("防具分類1" in uniqueValues) uniqueValues["防具分類1"].add(data.防具分類1);
+                    if ("強化Lv" in uniqueValues) uniqueValues["強化Lv"].add(data.強化Lv);
+                    if ("必要素材" in uniqueValues) uniqueValues["必要素材"].add(data.必要素材);
                 }
             });
             searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'

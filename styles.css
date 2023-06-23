@@ -14,7 +14,6 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    height: 40px;
 }
 
 #searchInput, #searchForm input[type="submit"] {

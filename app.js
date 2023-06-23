@@ -14,6 +14,67 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let links = {};
 
+    // Get form elements
+    const signupForm = document.querySelector('#signup-form');
+    const signupEmail = document.querySelector('#signup-email');
+    const signupPassword = document.querySelector('#signup-password');
+
+    // Get form elements
+    const loginForm = document.querySelector('#login-form');
+    const loginEmail = document.querySelector('#login-email');
+    const loginPassword = document.querySelector('#login-password');
+    
+    // Signup function
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = signupEmail.value;
+        const password = signupPassword.value;
+        
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            var user = userCredential.user;
+            
+            // Send email verification
+            user.sendEmailVerification()
+            .then(() => {
+                // Email verification sent
+                // Let the user know
+                alert('Verification email sent. Please check your inbox and verify your email address');
+            })
+            .catch((error) => {
+                console.error('Error sending email verification', error);
+            });
+        })
+        .catch((error) => {
+            console.error('Error signing up with email and password', error);
+        });
+        
+        signupForm.reset();
+    });
+    
+     // Login function
+     loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = loginEmail.value;
+        const password = loginPassword.value;
+        
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in 
+            var user = userCredential.user;
+            alert('Logged in successfully');
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert('Error logging in: ' + errorMessage);
+        });
+        
+        loginForm.reset();
+    });
+    
     // Fetch links from Firestore
     function fetchLinks() {
         db.collection("armor").get().then((querySnapshot) => {

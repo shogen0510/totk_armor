@@ -175,7 +175,8 @@ document.addEventListener("DOMContentLoaded", function() {
             let th = document.createElement("th");
             th.textContent = header;
 
-            if (header in uniqueValues) {
+            // Add pulldown only to "search-table" and "quantity-table"
+            if ((tableId === "search-table" || tableId === "quantity-table") && header in uniqueValues) {
                 let select = document.createElement("select");
 
                 let option = document.createElement("option");
@@ -208,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-
+        
         // Add table rows
         data.sort((a, b) => a['No'] - b['No']).forEach(row => {
             let tr = document.createElement("tr");

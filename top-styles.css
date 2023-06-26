@@ -12,15 +12,15 @@ body {
 #google-signin {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4285f4;
-    color: white;
+    background-color: #ffffff;
+    color: rgba(255, 255, 255, 0.256);
     text-decoration: none;
     border: none;
     border-radius: 4px;
 }
 
 #google-signin:hover {
-    background-color: #2a75f3;
+    background-color: #e3e3e3;
 }
 
 #hello-world-page {

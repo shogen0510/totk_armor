@@ -10,13 +10,16 @@ body {
 }
 
 #google-signin {
-    display: inline-block;
-    padding: 10px 20px;
+    display: flex; /* Changed from inline-block to flex */
+    align-items: center; /* Vertically center the content */
+    justify-content: space-between; /* Distribute space evenly between the elements */
+    padding: 10px 40px; /* Increase the horizontal padding to make the button wider */
     background-color: #ffffff;
     color: rgb(70, 70, 70);
     text-decoration: none;
     border: none;
     border-radius: 4px;
+    width: 250px; /* Set a specific width if necessary */
 }
 
 #google-signin:hover {

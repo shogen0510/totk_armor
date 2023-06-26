@@ -18,15 +18,26 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
     </script>
+    <title>Materials for Armor</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, World!</title>
-    <link rel="stylesheet" href="search-styles.css"> <!-- CSSファイルへのリンク -->
+    <link rel="stylesheet" href="search-styles.css">
+    <title>Search your Armor</title>
 </head>
 <body>
-    <div id="hello-world-page">
-        <h1>Hello, World!</h1>
+    <div id="app">
+        <form id="searchForm">
+            <input type="text" id="search" placeholder="Search...">
+            <input type="submit" id="searchBtn" value="Search" />
+        </form>
+        <button id="saveBtn">Save</button>
+        <button id="clearBtn">Clear</button>
+        <table id="quantity-table"></table> <!-- Added new table for material quantities -->
+        <table id="search-table"></table>
+        <table id="status-table"></table>
     </div>
-    <script src="search-app.js"></script> <!-- JavaScriptファイルへのリンク -->
+    
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>    
+    <script src="search-app.js"></script>
 </body>
 </html>

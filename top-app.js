@@ -2,13 +2,13 @@
 var provider = new firebase.auth.GoogleAuthProvider();
 
 // Googleサインインボタンにクリックイベントリスナを追加
-document.getElementById('google-signin').addEventListener('click', function() {
+document.getElementById('google-signin').addEventListener('click', function(event) {
+    // デフォルトのリンククリックの動作を抑制
+    event.preventDefault();
     // Googleサインインのポップアップウィンドウを表示
     firebase.auth().signInWithPopup(provider).then(function(result) {
         // ユーザーがサインインした後の処理
         console.log('User signed in');
-        // ログイン成功後、search.htmlページにリダイレクト
-        window.location.href = "search.html";
     }).catch(function(error) {
         // エラーハンドリング
         console.error('Error occurred during sign-in', error);

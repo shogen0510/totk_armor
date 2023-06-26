@@ -12,33 +12,7 @@ body {
     align-items: center; /* Horizontally center the content */
 }
 
-#google-signin,
-#facebook-signin {
-    display: inline-flex; /* Changed from inline-block to inline-flex */
-    align-items: center; /* Vertically center the content */
-    justify-content: space-between; /* Distribute space evenly between the elements */
-    padding: 10px 40px; /* Increase the horizontal padding to make the button wider */
-    background-color: #ffffff;
-    color: rgb(70, 70, 70);
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    margin: 10px 0; /* Add margin for separation */
-    width: 80%; /* set width to half of available width */
-}
-
-#google-signin:hover,
-#facebook-signin:hover {
-    background-color: #ffffff;
-}
-
 #hello-world-page {
     text-align: center;
     padding: 50px;
-}
-
-.form__img {
-    height: 20px;
-    width: 20px;
-    margin-right: 10px; /* Add some space between the image and the text */
 }

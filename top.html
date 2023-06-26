@@ -4,6 +4,11 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+
+    <!-- Firebase UI -->
+    <script src="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.css">
+
     <script>
         // Your web app's Firebase configuration
         var firebaseConfig = {
@@ -26,14 +31,7 @@
 <body>
     <div id="login-page">
         <h1>Login</h1>
-        <a href="#" id="google-signin" class="button-white">
-            <img class="form__img" alt="google" src="glogo.svg"> <!-- あなたがホストするGoogleのSVGロゴへのパスに置き換えてください -->
-            <span class="google__span">log in with Google</span>
-        </a>
-        <a href="#" id="facebook-signin" class="button-white">
-            <img class="form__img" alt="facebook" src="flogo.svg"> <!-- あなたがホストするFacebookのSVGロゴへのパスに置き換えてください -->
-            <span class="facebook__span">log in with Facebook</span>
-        </a>
+        <div id="firebaseui-auth-container"></div>
     </div>
     <script src="top-app.js"></script> <!-- 追加するJavaScriptファイルへのリンク -->
 </body>

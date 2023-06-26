@@ -10,15 +10,15 @@ body {
 #google-signin {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4285f4;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(70, 70, 70);
     text-decoration: none;
     border: none;
     border-radius: 4px;
 }
 
 #google-signin:hover {
-    background-color: #2a75f3;
+    background-color: #ffffff;
 }
 
 #hello-world-page {

@@ -26,10 +26,25 @@
 <body>
     <div id="login-page">
         <h1>Login</h1>
+    
+        <!-- Googleでのログイン -->
         <a href="#" id="google-signin" class="button-white">
-            <img class="form__img" alt="google" src="glogo.svg"> <!-- あなたがホストするGoogleのSVGロゴへのパスに置き換えてください -->
+            <img class="form__img" alt="google" src="glogo.svg">
             <span class="google__span">Googleでログイン</span>
         </a>
+    
+        <!-- Facebookでのログイン -->
+        <a href="#" id="facebook-signin" class="button-white">
+            <img class="form__img" alt="facebook" src="fblogo.svg">
+            <span class="facebook__span">Facebookでログイン</span>
+        </a>
+    
+        <!-- メールアドレスとパスワードでのログイン -->
+        <form id="email-password-login">
+            <input type="email" id="email-input" placeholder="Email">
+            <input type="password" id="password-input" placeholder="Password">
+            <button type="submit">Sign in with Email and Password</button>
+        </form>
     </div>
     <script src="top-app.js"></script> <!-- 追加するJavaScriptファイルへのリンク -->
 </body>

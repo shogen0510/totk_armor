@@ -20,10 +20,10 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // ユーザーがログインしている場合
         document.getElementById('login-page').style.display = 'none';
-        //document.getElementById('hello-world-page').style.display = 'block';
+        // ログイン成功後、search.htmlページにリダイレクト
+        window.location.href = "search.html";
     } else {
         // ユーザーがログアウトしている場合
         document.getElementById('login-page').style.display = 'block';
-        //document.getElementById('hello-world-page').style.display = 'none';
     }
-}); 
+});

@@ -107,24 +107,23 @@ document.addEventListener("DOMContentLoaded", function() {
     // Get data from Firestore
     function fetchStatusData() {
         dbData = [];
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                db.collection("userStatuses").doc(user.uid).collection("STATUS").get().then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        let data = doc.data();
-                        data.id = doc.id;
-                        dbData.push(data);
-                    });
-
-                    // Ensure that 'status-table' exists in the DOM before attempting to create it
-                    if (document.getElementById('status-table')) {
-                        createTable(dbData, 'STATUS', 'status-table');
-                    } else {
-                        console.error("Unable to find an element with the id 'status-table' in the DOM");
-                    }
+        let user = firebase.auth().currentUser;  // <- use currentUser directly instead of onAuthStateChanged
+        if (user) {
+            db.collection("userStatuses").doc(user.uid).collection("STATUS").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    dbData.push(data);
                 });
-            }
-        });
+
+                // Ensure that 'status-table' exists in the DOM before attempting to create it
+                if (document.getElementById('status-table')) {
+                    createTable(dbData, 'STATUS', 'status-table');
+                } else {
+                    console.error("Unable to find an element with the id 'status-table' in the DOM");
+                }
+            });
+        }
     }
 
     fetchStatusData();

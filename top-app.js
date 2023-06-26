@@ -1,6 +1,9 @@
 // Google認証プロバイダオブジェクトのインスタンス化
 var provider = new firebase.auth.GoogleAuthProvider();
 
+// Facebook認証プロバイダオブジェクトのインスタンス化
+var facebookProvider = new firebase.auth.FacebookAuthProvider();
+
 // Googleサインインボタンにクリックイベントリスナを追加
 document.getElementById('google-signin').addEventListener('click', function(event) {
     // デフォルトのリンククリックの動作を抑制
@@ -13,6 +16,14 @@ document.getElementById('google-signin').addEventListener('click', function(even
         // エラーハンドリング
         console.error('Error occurred during sign-in', error);
     });
+});
+
+// Facebookサインインボタンにクリックイベントリスナを追加
+document.getElementById('facebook-signin').addEventListener('click', function(event) {
+    // デフォルトのリンククリックの動作を抑制
+    event.preventDefault();
+    // サインインのポップアップウィンドウを表示
+    signInWithProvider(facebookProvider);
 });
 
 // ユーザーのログイン状態の監視

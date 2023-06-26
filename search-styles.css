@@ -16,7 +16,7 @@ body {
     margin-top: 20px;
 }
 
-#searchInput, #searchForm input[type="submit"] {
+#searchForm input[type="submit"] {
     margin: 5px;
     padding: 5px;
     font-size: 18px;

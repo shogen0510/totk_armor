@@ -17,7 +17,12 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    } else {
+        firebase.app();
+    }
+
     var db = firebase.firestore();
 
     let links = {};
@@ -29,6 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 let data = doc.data();
                 links[data.name] = data.URL;
             });
+        }).catch((error) => {
+            console.error("Error fetching documents from 'armor' collection: ", error);
         });
 
         db.collection("materials").get().then((querySnapshot) => {
@@ -36,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 let data = doc.data();
                 links[data.name] = data.URL;
             });
+        }).catch((error) => {
+            console.error("Error fetching documents from 'materials' collection: ", error);
         });
     }
 
@@ -102,6 +111,8 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             console.error("Unable to find an element with the id 'status-table' in the DOM");
         }
+    }).catch((error) => {
+        console.error("Error fetching documents from 'STATUS' collection: ", error);
     });
 
     function createTable(data, type, tableId) {
@@ -181,6 +192,8 @@ document.addEventListener("DOMContentLoaded", function() {
             let quantities = aggregateMaterialQuantities(searchData);
             createQuantityTable(quantities, 'quantity-table');
             createTable(searchData, 'DB', 'search-table');
+        }).catch((error) => {
+            console.error("Error fetching documents from 'DB' collection: ", error);
         });
     }
     
@@ -197,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         '強化済みフラグ': checked
                     });
                 });
-            }).catch(err => console.log(err));
+            }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
     
             // Update '強化済みフラグ' in all matching DB documents
             db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
@@ -206,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         '強化済みフラグ': checked
                     });
                 });
-            }).catch(err => console.log(err));
+            }).catch(err => console.log("Error updating 'DB' documents: ", err));
         });
         alert("Saved!");
     }

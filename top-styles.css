@@ -7,6 +7,9 @@ body {
 #login-page {
     text-align: center;
     padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally center the content */
 }
 
 #google-signin,
@@ -21,7 +24,7 @@ body {
     border: none;
     border-radius: 4px;
     margin: 10px 0; /* Add margin for separation */
-    width: 100%; /* set width to full available width */
+    width: 50%; /* set width to half of available width */
 }
 
 #google-signin:hover,

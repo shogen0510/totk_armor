@@ -1,5 +1,7 @@
 body {
     font-family: Arial, sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    background-color: #f3f3f3;
 }
 
 #login-page {

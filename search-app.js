@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // This function will create a new table using the material quantities
     function createQuantityTable(quantities, tableId) {
         let table = document.getElementById(tableId);
+        console.log(table); // <- table要素をログ出力
         if (!table) {
             console.error("Unable to find an element with the id '" + tableId + "' in the DOM");
             return;
@@ -112,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
             db.collection("userStatuses").doc(user.uid).collection("STATUS").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     let data = doc.data();
+                    console.log(data); // <- データをログ出力
                     data.id = doc.id;
                     dbData.push(data);
                 });
@@ -122,6 +124,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 } else {
                     console.error("Unable to find an element with the id 'status-table' in the DOM");
                 }
+            }).catch((error) => {
+                console.log("Error getting documents: ", error);
             });
         }
     }
@@ -134,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);
+        console.log(table); // <- table要素をログ出力
         let headers;
         if(type === 'STATUS'){
             headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];

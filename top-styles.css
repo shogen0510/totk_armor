@@ -27,3 +27,8 @@ body {
     text-align: center;
     padding: 50px;
 }
+
+.form__img {
+    height: 20px;
+    width: 20px;
+}

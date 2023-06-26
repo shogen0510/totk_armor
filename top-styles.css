@@ -24,7 +24,7 @@ body {
     border: none;
     border-radius: 4px;
     margin: 10px 0; /* Add margin for separation */
-    width: 50%; /* set width to half of available width */
+    width: 80%; /* set width to half of available width */
 }
 
 #google-signin:hover,

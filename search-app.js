@@ -215,34 +215,47 @@ window.onload = function() {
 
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
+        let promises = []; // Keep track of all async operations
+    
         checkboxes.forEach(checkbox => {
             let level = checkbox.id;
             let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
-
+    
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
                     // Update '強化済みフラグ' in all matching STATUS documents
-                    db.collection("userStatuses").doc(user.uid).collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
+                    let statusPromise = db.collection("userStatuses").doc(user.uid).collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
+                        let innerPromises = [];
                         snapshot.forEach(doc => {
-                            db.collection("userStatuses").doc(user.uid).collection("STATUS").doc(doc.id).update({
+                            innerPromises.push(db.collection("userStatuses").doc(user.uid).collection("STATUS").doc(doc.id).update({
                                 '強化済みフラグ': checked
-                            });
+                            }));
                         });
+                        return Promise.all(innerPromises);
                     }).catch(err => console.log(err));
-
+    
+                    promises.push(statusPromise);
+    
                     // Update '強化済みフラグ' in all matching DB documents
-                    db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
+                    let dbPromise = db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
+                        let innerPromises = [];
                         snapshot.forEach(doc => {
-                            db.collection("DB").doc(doc.id).update({
+                            innerPromises.push(db.collection("DB").doc(doc.id).update({
                                 '強化済みフラグ': checked
-                            });
+                            }));
                         });
+                        return Promise.all(innerPromises);
                     }).catch(err => console.log(err));
+    
+                    promises.push(dbPromise);
                 }
             });
         });
-        alert("Saved!");
-        fetchStatusData(); // Update the displayed data after the save
+    
+        Promise.all(promises).then(() => {
+            alert("Saved!");
+            fetchStatusData(); // Update the displayed data after the save
+        });
     }
 
     function clearStatus() {

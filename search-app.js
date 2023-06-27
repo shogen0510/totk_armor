@@ -98,21 +98,25 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Get data from Firestore
-    db.collection("STATUS").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            data.id = doc.id;
-            dbData.push(data);
-        });
-
-        // Ensure that 'status-table' exists in the DOM before attempting to create it
-        if (document.getElementById('status-table')) {
-            createTable(dbData, 'STATUS', 'status-table');
-        } else {
-            console.error("Unable to find an element with the id 'status-table' in the DOM");
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            db.collection("STATUS").doc(user.uid).collection('status').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    dbData.push(data);
+                });
+    
+                // Ensure that 'status-table' exists in the DOM before attempting to create it
+                if (document.getElementById('status-table')) {
+                    createTable(dbData, 'STATUS', 'status-table');
+                } else {
+                    console.error("Unable to find an element with the id 'status-table' in the DOM");
+                }
+            }).catch((error) => {
+                console.error("Error fetching documents from 'STATUS' collection: ", error);
+            });
         }
-    }).catch((error) => {
-        console.error("Error fetching documents from 'STATUS' collection: ", error);
     });
 
     function createTable(data, type, tableId) {
@@ -166,34 +170,38 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function searchDB(keyword) {
-        db.collection("DB").get().then((querySnapshot) => {
-            let searchData = [];
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-    
-                // Split the keyword by space (both full-width and half-width) to get an array of keywords
-                let keywords = keyword.split(/[\s\u3000]/);
-    
-                // Check if each keyword is included in the document
-                let isAllKeywordsIncluded = keywords.every(kw =>
-                    data.防具.includes(kw) ||
-                    data.防具分類1.includes(kw) ||
-                    data.強化Lv.includes(kw) ||
-                    data.必要素材.includes(kw)
-                );
-    
-                if(data.強化済みフラグ === 0 && isAllKeywordsIncluded) {
-                    data.id = doc.id;
-                    searchData.push(data);
-                }
-            });
-    
-            searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
-            let quantities = aggregateMaterialQuantities(searchData);
-            createQuantityTable(quantities, 'quantity-table');
-            createTable(searchData, 'DB', 'search-table');
-        }).catch((error) => {
-            console.error("Error fetching documents from 'DB' collection: ", error);
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                db.collection("DB").doc(user.uid).collection('db').get().then((querySnapshot) => {
+                    let searchData = [];
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data();
+            
+                        // Split the keyword by space (both full-width and half-width) to get an array of keywords
+                        let keywords = keyword.split(/[\s\u3000]/);
+            
+                        // Check if each keyword is included in the document
+                        let isAllKeywordsIncluded = keywords.every(kw =>
+                            data.防具.includes(kw) ||
+                            data.防具分類1.includes(kw) ||
+                            data.強化Lv.includes(kw) ||
+                            data.必要素材.includes(kw)
+                        );
+            
+                        if(data.強化済みフラグ === 0 && isAllKeywordsIncluded) {
+                            data.id = doc.id;
+                            searchData.push(data);
+                        }
+                    });
+            
+                    searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
+                    let quantities = aggregateMaterialQuantities(searchData);
+                    createQuantityTable(quantities, 'quantity-table');
+                    createTable(searchData, 'DB', 'search-table');
+                }).catch((error) => {
+                    console.error("Error fetching documents from 'DB' collection: ", error);
+                });
+            }
         });
     }
     
@@ -202,24 +210,27 @@ document.addEventListener("DOMContentLoaded", function() {
         checkboxes.forEach(checkbox => {
             let level = checkbox.id;
             let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
-    
-            // Update '強化済みフラグ' in all matching STATUS documents
-            db.collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    db.collection("STATUS").doc(doc.id).update({
-                        '強化済みフラグ': checked
-                    });
-                });
-            }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
-    
-            // Update '強化済みフラグ' in all matching DB documents
-            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    db.collection("DB").doc(doc.id).update({
-                        '強化済みフラグ': checked
-                    });
-                });
-            }).catch(err => console.log("Error updating 'DB' documents: ", err));
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // Update '強化済みフラグ' in all matching STATUS documents
+                    db.collection("STATUS").doc(user.uid).collection('status').where('防具強化Lv', '==', level).get().then(snapshot => {
+                        snapshot.forEach(doc => {
+                            db.collection("STATUS").doc(user.uid).collection('status').doc(doc.id).update({
+                                '強化済みフラグ': checked
+                            });
+                        });
+                    }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
+            
+                    // Update '強化済みフラグ' in all matching DB documents
+                    db.collection("DB").doc(user.uid).collection('db').where('防具強化Lv', '==', level).get().then(snapshot => {
+                        snapshot.forEach(doc => {
+                            db.collection("DB").doc(user.uid).collection('db').doc(doc.id).update({
+                                '強化済みフラグ': checked
+                            });
+                        });
+                    }).catch(err => console.log("Error updating 'DB' documents: ", err));
+                }
+            });
         });
         alert("Saved!");
     }

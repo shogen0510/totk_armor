@@ -18,6 +18,23 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // ユーザーがログインしている場合
     document.getElementById('login-page').style.display = 'none';
+
+    // 初回ログイン時にコレクションをコピー
+    var userDocRef = firebase.firestore().collection('STATUS').doc(user.uid);
+    userDocRef.get().then((doc) => {
+      if (!doc.exists) { // 初回ログイン時はユーザードキュメントがまだ存在しない
+        var batch = firebase.firestore().batch();
+
+        firebase.firestore().collection('STATUS').get().then((collection) => {
+          collection.forEach((doc) => {
+            var userDoc = userDocRef.collection('status').doc(doc.id);
+            batch.set(userDoc, { ...doc.data(), '強化済みフラグ': 0 });
+          });
+          batch.commit().catch((error) => console.error("Error committing batch: ", error));
+        });
+      }
+    });
+
   } else {
     // ユーザーがログアウトしている場合
     document.getElementById('login-page').style.display = 'block';

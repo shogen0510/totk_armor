@@ -1,4 +1,12 @@
-window.onload = function() {
+// ユーザーのログイン状態の監視
+firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) {
+        // ユーザーがログアウトしている場合、ログインページにリダイレクト
+        window.location.href = "top.html";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
         apiKey: "AIzaSyAuLNkpFgnd9YAWfcRY_kklrDOt19HK_UM",
         authDomain: "unified-altar-389603.firebaseapp.com",
@@ -7,38 +15,16 @@ window.onload = function() {
         messagingSenderId: "894405393564",
         appId: "1:894405393564:web:c385d9191504b1ae108159"
     };
-    
-    firebase.initializeApp(firebaseConfig);
-    
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    } else {
+        firebase.app();
+    }
+
     var db = firebase.firestore();
-    
-    // ユーザーのログイン状態の監視
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (!user) {
-            // ユーザーがログアウトしている場合、ログインページにリダイレクト
-            window.location.href = "top.html";
-        } else {
-            // User is signed in, let's get their user-specific collection or create it
-            db.collection("userStatuses").doc(user.uid).set({}, {merge: true}).then(function() {
-                // If the user does not have a STATUS collection, initialize it
-                db.collection("userStatuses").doc(user.uid).collection("STATUS").get().then(function(querySnapshot) {
-                    if (querySnapshot.empty) {
-                        // Here, clone your original STATUS collection
-                        // Set all '強化済みフラグ' to 0
-                        db.collection("STATUS").get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                let data = doc.data();
-                                data['強化済みフラグ'] = 0;
-                                db.collection("userStatuses").doc(user.uid).collection("STATUS").doc(doc.id).set(data);
-                            });
-                        });
-                    }
-                });
-            });
-            fetchStatusData();
-        }
-    });
-    
+
     let links = {};
 
     // Fetch links from Firestore
@@ -48,6 +34,8 @@ window.onload = function() {
                 let data = doc.data();
                 links[data.name] = data.URL;
             });
+        }).catch((error) => {
+            console.error("Error fetching documents from 'armor' collection: ", error);
         });
 
         db.collection("materials").get().then((querySnapshot) => {
@@ -55,6 +43,8 @@ window.onload = function() {
                 let data = doc.data();
                 links[data.name] = data.URL;
             });
+        }).catch((error) => {
+            console.error("Error fetching documents from 'materials' collection: ", error);
         });
     }
 
@@ -108,30 +98,22 @@ window.onload = function() {
     }
 
     // Get data from Firestore
-    function fetchStatusData() {
-        dbData = [];
-        let user = firebase.auth().currentUser;  // <- use currentUser directly instead of onAuthStateChanged
-        if (user) {
-            db.collection("userStatuses").doc(user.uid).collection("STATUS").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    data.id = doc.id;
-                    dbData.push(data);
-                });
+    db.collection("STATUS").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            data.id = doc.id;
+            dbData.push(data);
+        });
 
-                // Ensure that 'status-table' exists in the DOM before attempting to create it
-                if (document.getElementById('status-table')) {
-                    createTable(dbData, 'STATUS', 'status-table');
-                } else {
-                    console.error("Unable to find an element with the id 'status-table' in the DOM");
-                }
-            });
+        // Ensure that 'status-table' exists in the DOM before attempting to create it
+        if (document.getElementById('status-table')) {
+            createTable(dbData, 'STATUS', 'status-table');
+        } else {
+            console.error("Unable to find an element with the id 'status-table' in the DOM");
         }
-    }
-
-    // You can see that we're now using fetchStatusData() to pull the user's data
-    // This function gets called every time the page is loaded, and will also be called after we update the data
-    // This ensures that our page stays up-to-date whenever changes are made to the Firebase data
+    }).catch((error) => {
+        console.error("Error fetching documents from 'STATUS' collection: ", error);
+    });
 
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);
@@ -188,10 +170,10 @@ window.onload = function() {
             let searchData = [];
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
-
+    
                 // Split the keyword by space (both full-width and half-width) to get an array of keywords
                 let keywords = keyword.split(/[\s\u3000]/);
-
+    
                 // Check if each keyword is included in the document
                 let isAllKeywordsIncluded = keywords.every(kw =>
                     data.防具.includes(kw) ||
@@ -199,63 +181,47 @@ window.onload = function() {
                     data.強化Lv.includes(kw) ||
                     data.必要素材.includes(kw)
                 );
-
+    
                 if(data.強化済みフラグ === 0 && isAllKeywordsIncluded) {
                     data.id = doc.id;
                     searchData.push(data);
                 }
             });
-
+    
             searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
             let quantities = aggregateMaterialQuantities(searchData);
             createQuantityTable(quantities, 'quantity-table');
             createTable(searchData, 'DB', 'search-table');
+        }).catch((error) => {
+            console.error("Error fetching documents from 'DB' collection: ", error);
         });
     }
-
+    
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
-        let promises = []; // Keep track of all async operations
-    
         checkboxes.forEach(checkbox => {
             let level = checkbox.id;
             let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
     
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    // Update '強化済みフラグ' in all matching STATUS documents
-                    let statusPromise = db.collection("userStatuses").doc(user.uid).collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
-                        let innerPromises = [];
-                        snapshot.forEach(doc => {
-                            innerPromises.push(db.collection("userStatuses").doc(user.uid).collection("STATUS").doc(doc.id).update({
-                                '強化済みフラグ': checked
-                            }));
-                        });
-                        return Promise.all(innerPromises);
-                    }).catch(err => console.log(err));
+            // Update '強化済みフラグ' in all matching STATUS documents
+            db.collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    db.collection("STATUS").doc(doc.id).update({
+                        '強化済みフラグ': checked
+                    });
+                });
+            }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
     
-                    promises.push(statusPromise);
-    
-                    // Update '強化済みフラグ' in all matching DB documents
-                    let dbPromise = db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
-                        let innerPromises = [];
-                        snapshot.forEach(doc => {
-                            innerPromises.push(db.collection("DB").doc(doc.id).update({
-                                '強化済みフラグ': checked
-                            }));
-                        });
-                        return Promise.all(innerPromises);
-                    }).catch(err => console.log(err));
-    
-                    promises.push(dbPromise);
-                }
-            });
+            // Update '強化済みフラグ' in all matching DB documents
+            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    db.collection("DB").doc(doc.id).update({
+                        '強化済みフラグ': checked
+                    });
+                });
+            }).catch(err => console.log("Error updating 'DB' documents: ", err));
         });
-    
-        Promise.all(promises).then(() => {
-            alert("Saved!");
-            fetchStatusData(); // Update the displayed data after the save
-        });
+        alert("Saved!");
     }
 
     function clearStatus() {
@@ -285,3 +251,4 @@ window.onload = function() {
         // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
+});

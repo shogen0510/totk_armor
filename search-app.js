@@ -129,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    fetchStatusData();
-
     // You can see that we're now using fetchStatusData() to pull the user's data
     // This function gets called every time the page is loaded, and will also be called after we update the data
     // This ensures that our page stays up-to-date whenever changes are made to the Firebase data

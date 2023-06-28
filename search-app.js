@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     data.id = doc.id;
                     dbData.push(data);
                 });
-    
+
                 // Ensure that 'status-table' exists in the DOM before attempting to create it
                 if (document.getElementById('status-table')) {
                     createTable(dbData, 'STATUS', 'status-table');
@@ -176,10 +176,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     let searchData = [];
                     querySnapshot.forEach((doc) => {
                         let data = doc.data();
-            
+
                         // Split the keyword by space (both full-width and half-width) to get an array of keywords
                         let keywords = keyword.split(/[\s\u3000]/);
-            
+
                         // Check if each keyword is included in the document
                         let isAllKeywordsIncluded = keywords.every(kw =>
                             data.防具.includes(kw) ||
@@ -187,13 +187,13 @@ document.addEventListener("DOMContentLoaded", function() {
                             data.強化Lv.includes(kw) ||
                             data.必要素材.includes(kw)
                         );
-            
+
                         if(data.強化済みフラグ === 0 && isAllKeywordsIncluded) {
                             data.id = doc.id;
                             searchData.push(data);
                         }
                     });
-            
+
                     searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
                     let quantities = aggregateMaterialQuantities(searchData);
                     createQuantityTable(quantities, 'quantity-table');
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-    
+
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             });
                         });
                     }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
-            
+
                     // Update '強化済みフラグ' in all matching DB documents
                     db.collection("DB").doc(user.uid).collection('db').where('防具強化Lv', '==', level).get().then(snapshot => {
                         snapshot.forEach(doc => {

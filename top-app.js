@@ -27,8 +27,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         firebase.firestore().collection('STATUS').get().then((collection) => {
           collection.forEach((doc) => {
-            var userDoc = userDocRef.collection('status').doc(doc.id);
-            batch.set(userDoc, { ...doc.data(), '強化済みフラグ': 0 });
+            var userDoc = userDocRef.collection('status').doc(doc.id + '-' + user.uid);
+            batch.set(userDoc, { ...doc.data(), '強化済みフラグ': 0, 'originalDocId': doc.id });
           });
           batch.commit().catch((error) => console.error("Error committing batch: ", error));
         });

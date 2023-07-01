@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (header === '強化済みフラグ' && type === 'STATUS') {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
-                    checkbox.checked = row[header];
+                    checkbox.checked = row[header] === 1;  // ここでデータに基づいてチェックボックスの状態を設定
                     checkbox.id = row['防具強化Lv'].toString();
                     td.appendChild(checkbox);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {

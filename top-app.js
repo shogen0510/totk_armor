@@ -26,11 +26,25 @@ firebase.auth().onAuthStateChanged(function(user) {
         var batch = firebase.firestore().batch();
 
         firebase.firestore().collection('STATUS').get().then((collection) => {
+          var batch = firebase.firestore().batch();
+          var operationCounter = 0;
+      
           collection.forEach((doc) => {
-            var userDoc = userDocRef.collection('status').doc(doc.id + '-' + user.uid);
-            batch.set(userDoc, { ...doc.data(), '強化済みフラグ': 0, 'originalDocId': doc.id });
+              var userDoc = userDocRef.collection('status').doc(doc.id + '-' + user.uid);
+              batch.set(userDoc, { ...doc.data(), '強化済みフラグ': 0, 'originalDocId': doc.id });
+              operationCounter++;
+      
+              if (operationCounter === 500) {
+                  // コミットして新しいバッチを開始する
+                  batch.commit();
+                  batch = firebase.firestore().batch();
+                  operationCounter = 0;
+              }
           });
-          batch.commit().catch((error) => console.error("Error committing batch: ", error));
+      
+          if (operationCounter > 0) {
+              batch.commit().catch((error) => console.error("Error committing batch: ", error));
+          }
         });
       }
     });

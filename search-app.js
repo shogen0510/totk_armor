@@ -3,8 +3,27 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (!user) {
         // ユーザーがログアウトしている場合、ログインページにリダイレクト
         window.location.href = "top.html";
+    } else {
+        initializeUserStatusTable(user);
     }
 });
+
+// Initialize local storage for STATUS collection
+function initializeUserStatusTable(user) {
+    if (!localStorage.getItem(user.uid)) {
+        let userStatusTable = {};
+        db.collection("STATUS").doc(user.uid).collection('status').get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id;
+                userStatusTable[data.id] = data;
+            });
+            localStorage.setItem(user.uid, JSON.stringify(userStatusTable));
+        }).catch((error) => {
+            console.error("Error fetching documents from 'STATUS' collection: ", error);
+        });
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
@@ -100,22 +119,19 @@ document.addEventListener("DOMContentLoaded", function() {
     // Get data from Firestore
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            db.collection("STATUS").doc(user.uid).collection('status').get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    data.id = doc.id;
-                    dbData.push(data);
-                });
-
+            // The local storage is used instead of Firestore
+            let dbData = JSON.parse(localStorage.getItem(user.uid));
+            if (dbData && Object.keys(dbData).length) {
+                for (let id in dbData) {
+                    dbData.push(dbData[id]);
+                }
                 // Ensure that 'status-table' exists in the DOM before attempting to create it
                 if (document.getElementById('status-table')) {
                     createTable(dbData, 'STATUS', 'status-table');
                 } else {
                     console.error("Unable to find an element with the id 'status-table' in the DOM");
                 }
-            }).catch((error) => {
-                console.error("Error fetching documents from 'STATUS' collection: ", error);
-            });
+            }
         }
     });
 
@@ -207,20 +223,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function saveStatus() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
+        let userStatusTable = {};
         checkboxes.forEach(checkbox => {
             let level = checkbox.id;
             let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                    // Update '強化済みフラグ' in all matching STATUS documents
-                    db.collection("STATUS").doc(user.uid).collection('status').where('防具強化Lv', '==', level).get().then(snapshot => {
-                        snapshot.forEach(doc => {
-                            db.collection("STATUS").doc(user.uid).collection('status').doc(doc.id).update({
-                                '強化済みフラグ': checked
-                            });
-                        });
-                    }).catch(err => console.log("Error updating 'STATUS' documents: ", err));
-
+                    // Get the user's STATUS data from local storage
+                    userStatusTable = JSON.parse(localStorage.getItem(user.uid));
+                    for (let id in userStatusTable) {
+                        if (userStatusTable[id]['防具強化Lv'] == level) {
+                            userStatusTable[id]['強化済みフラグ'] = checked;
+                        }
+                    }
+                    // Save the updated data back to local storage
+                    localStorage.setItem(user.uid, JSON.stringify(userStatusTable));
                     // Update '強化済みフラグ' in all matching DB documents
                     db.collection("DB").doc(user.uid).collection('db').where('防具強化Lv', '==', level).get().then(snapshot => {
                         snapshot.forEach(doc => {
@@ -239,6 +256,18 @@ document.addEventListener("DOMContentLoaded", function() {
         let checkboxes = document.querySelectorAll("input[type='checkbox']");
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
+        });
+    
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // Get the user's STATUS data from local storage
+                let userStatusTable = JSON.parse(localStorage.getItem(user.uid));
+                for (let id in userStatusTable) {
+                    userStatusTable[id]['強化済みフラグ'] = 0;
+                }
+                // Save the updated data back to local storage
+                localStorage.setItem(user.uid, JSON.stringify(userStatusTable));
+            }
         });
         alert("Cleared!");
     }

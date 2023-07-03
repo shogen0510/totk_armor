@@ -1,29 +1,4 @@
-// ユーザーのログイン状態の監視
-firebase.auth().onAuthStateChanged(function(user) {
-    if (!user) {
-        // ユーザーがログアウトしている場合、ログインページにリダイレクト
-        window.location.href = "top.html";
-    } else {
-        initializeUserStatusTable(user);
-    }
-});
-
-// Initialize local storage for STATUS collection
-function initializeUserStatusTable(user) {
-    if (!localStorage.getItem(user.uid)) {
-        let userStatusTable = {};
-        db.collection("STATUS").doc(user.uid).collection('status').get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                data.id = doc.id;
-                userStatusTable[data.id] = data;
-            });
-            localStorage.setItem(user.uid, JSON.stringify(userStatusTable));
-        }).catch((error) => {
-            console.error("Error fetching documents from 'STATUS' collection: ", error);
-        });
-    }
-}
+var db;
 
 document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
@@ -42,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
         firebase.app();
     }
 
-    var db = firebase.firestore();
+    db = firebase.firestore();
 
     let links = {};
 
@@ -67,10 +42,36 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Fetch links
     fetchLinks();
 
     let dbData = [];
+
+    // ユーザーのログイン状態の監視
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) {
+            // ユーザーがログアウトしている場合、ログインページにリダイレクト
+            window.location.href = "top.html";
+        } else {
+            initializeUserStatusTable(user);
+        }
+    });
+
+    // Initialize local storage for STATUS collection
+    function initializeUserStatusTable(user) {
+        if (!localStorage.getItem(user.uid)) {
+            let userStatusTable = {};
+            db.collection("STATUS").doc(user.uid).collection('status').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    userStatusTable[data.id] = data;
+                });
+                localStorage.setItem(user.uid, JSON.stringify(userStatusTable));
+            }).catch((error) => {
+                console.error("Error fetching documents from 'STATUS' collection: ", error);
+            });
+        }
+    }
 
     // This function will count the quantities for each item
     function aggregateMaterialQuantities(data) {
@@ -291,4 +292,5 @@ document.addEventListener("DOMContentLoaded", function() {
         // When CLEAR button is clicked, execute the clearStatus function
         clearStatus();
     });
+});
 });

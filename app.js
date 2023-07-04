@@ -47,9 +47,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Fetch links
+    // Fetch and store "DB" collection to localStorage on load
+    function fetchAndStoreDB() {
+        db.collection("DB").get().then((querySnapshot) => {
+            let dbData = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id;
+                dbData.push(data);
+            });
+
+            // Store to localStorage
+            localStorage.setItem("DB", JSON.stringify(dbData));
+        });
+    }
+
+    // Fetch links and store collections
     fetchLinks();
     fetchAndStoreStatus();
+    fetchAndStoreDB();
 
     let dbData = [];
 

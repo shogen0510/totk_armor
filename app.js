@@ -67,6 +67,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 dbData.push(data);
             });
 
+            // Sort the data by the 'No.' field in ascending order
+            dbData.sort((a, b) => a.No - b.No);
+
             // Store to localStorage
             localStorage.setItem("DB", JSON.stringify(dbData));
         });
@@ -160,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function() {
         table.appendChild(thead);
 
         // Add table rows
-        data.sort((a, b) => a['No'] - b['No']).forEach(row => {
+        data.forEach(row => {
             let tr = document.createElement("tr");
             headers.forEach(header => {
                 let td = document.createElement("td");

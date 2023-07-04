@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     td.appendChild(checkbox);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");
-                    llink.textContent = row[header];
+                    link.textContent = row[header];
                     link.href = links[row[header]]; // Link from Firestore
                     link.target = "_blank"; // This makes the link open in a new tab
                     link.rel = "noopener noreferrer"; // This prevents the new page from manipulating the original page

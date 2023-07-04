@@ -52,10 +52,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 statusData.push(data);
             });
 
+            // Sort the data by the 'No.' field in ascending order
+            statusData.sort((a, b) => a.No - b.No);
+
             // Store to localStorage
             localStorage.setItem("STATUS", JSON.stringify(statusData));
         });
     }
+
 
     // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {

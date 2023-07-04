@@ -248,6 +248,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         localStorage.setItem('STATUS', JSON.stringify(statusData));
         location.reload();
+
+        // Display saved message
+        let notification = document.getElementById('notification');
+        notification.style.display = 'block';
+        notification.textContent = 'Saved!';
+
+        // Hide the notification after 3 seconds
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
     });
     
     // Event Listener for Clear button

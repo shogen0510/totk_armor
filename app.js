@@ -31,8 +31,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Fetch and store "STATUS" collection to localStorage on load
+    function fetchAndStoreStatus() {
+        db.collection("STATUS").get().then((querySnapshot) => {
+            let statusData = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id;
+                data["強化済みフラグ"] = 0; // Reset the flag to 0
+                statusData.push(data);
+            });
+
+            // Store to localStorage
+            localStorage.setItem("STATUS", JSON.stringify(statusData));
+        });
+    }
+
     // Fetch links
     fetchLinks();
+    fetchAndStoreStatus();
 
     let dbData = [];
 
@@ -80,21 +97,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Get data from Firestore
-    db.collection("STATUS").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            data.id = doc.id;
-            dbData.push(data);
-        });
-
+    // Get data from localStorage
+    if (localStorage.getItem("STATUS")) {
+        dbData = JSON.parse(localStorage.getItem("STATUS"));
         // Ensure that 'status-table' exists in the DOM before attempting to create it
         if (document.getElementById('status-table')) {
             createTable(dbData, 'STATUS', 'status-table');
         } else {
             console.error("Unable to find an element with the id 'status-table' in the DOM");
         }
-    });
+    }
 
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);
@@ -156,78 +168,59 @@ document.addEventListener("DOMContentLoaded", function() {
                 let keywords = keyword.split(/[\s\u3000]/);
     
                 // Check if each keyword is included in the document
-                let isAllKeywordsIncluded = keywords.every(kw =>
-                    data.防具.includes(kw) ||
-                    data.防具分類1.includes(kw) ||
-                    data.強化Lv.includes(kw) ||
-                    data.必要素材.includes(kw)
-                );
+                let isAllKeywordsIncluded = keywords.every(kw => {
+                    return Object.values(data).some(v => v.toString().includes(kw));
+                });
     
-                if(data.強化済みフラグ === 0 && isAllKeywordsIncluded) {
+                // If all keywords are included, add the document to searchData
+                if (isAllKeywordsIncluded) {
                     data.id = doc.id;
                     searchData.push(data);
                 }
             });
     
-            searchData.sort((a, b) => a['No.'] - b['No.']); // Sort searchData based on 'No'
-            let quantities = aggregateMaterialQuantities(searchData);
-            createQuantityTable(quantities, 'quantity-table');
+            // Call the function to create a table
             createTable(searchData, 'DB', 'search-table');
+    
+            // Store the search result to the local storage
+            localStorage.setItem('DB', JSON.stringify(searchData));
         });
     }
-    
-    function saveStatus() {
-        let checkboxes = document.querySelectorAll("input[type='checkbox']");
-        checkboxes.forEach(checkbox => {
-            let level = checkbox.id;
-            let checked = checkbox.checked ? 1 : 0;  // if checked, set 1, else set 0
-    
-            // Update '強化済みフラグ' in all matching STATUS documents
-            db.collection("STATUS").where('防具強化Lv', '==', level).get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    db.collection("STATUS").doc(doc.id).update({
-                        '強化済みフラグ': checked
-                    });
-                });
-            }).catch(err => console.log(err));
-    
-            // Update '強化済みフラグ' in all matching DB documents
-            db.collection("DB").where('防具強化Lv', '==', level).get().then(snapshot => {
-                snapshot.forEach(doc => {
-                    db.collection("DB").doc(doc.id).update({
-                        '強化済みフラグ': checked
-                    });
-                });
-            }).catch(err => console.log(err));
-        });
-        alert("Saved!");
-    }
 
-    function clearStatus() {
-        let checkboxes = document.querySelectorAll("input[type='checkbox']");
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        alert("Cleared!");
-    }
-
-    let searchForm = document.getElementById("searchForm");
-    let saveBtn = document.getElementById("saveBtn");
-    let clearBtn = document.getElementById("clearBtn");
-
-    searchForm.addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent the form from being submitted normally
-        let searchKeyword = document.getElementById("search").value; // Get the search input value
-        searchDB(searchKeyword);
-    });  
-
-    saveBtn.addEventListener("click", function() {
-        // When SAVE button is clicked, execute the saveStatus function
-        saveStatus();
+    // Assign an event listener to the search button
+    document.getElementById('searchBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        let keyword = document.getElementById('search').value;
+        if(keyword.trim() !== '') {
+            searchDB(keyword);
+        }
     });
 
-    clearBtn.addEventListener("click", function() {
-        // When CLEAR button is clicked, execute the clearStatus function
-        clearStatus();
+    // Event Listener for Save button
+    document.getElementById('saveBtn').addEventListener('click', function() {
+        let checkboxes = document.querySelectorAll('#status-table input[type="checkbox"]');
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+
+        checkboxes.forEach(cb => {
+            let index = statusData.findIndex(row => row['防具強化Lv'].toString() === cb.id);
+            if (index > -1) {
+                statusData[index]['強化済みフラグ'] = cb.checked ? 1 : 0;
+            }
+        });
+
+        localStorage.setItem('STATUS', JSON.stringify(statusData));
+        location.reload();
+    });
+    
+    // Event Listener for Clear button
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+
+        statusData.forEach(row => {
+            row['強化済みフラグ'] = 0;
+        });
+
+        localStorage.setItem('STATUS', JSON.stringify(statusData));
+        location.reload();
     });
 });

@@ -159,32 +159,34 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function searchDB(keyword) {
-        db.collection("DB").get().then((querySnapshot) => {
-            let searchData = [];
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
+        let dbData = JSON.parse(localStorage.getItem('DB'));
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+        let searchData = [];
     
-                // Split the keyword by space (both full-width and half-width) to get an array of keywords
-                let keywords = keyword.split(/[\s\u3000]/);
+        // Split the keyword by space (both full-width and half-width) to get an array of keywords
+        let keywords = keyword.split(/[\s\u3000]/);
     
+        dbData.forEach(data => {
+            // Only look at items that have not been enhanced
+            if (statusData.some(status => status['防具強化Lv'] === data['防具強化Lv'] && status['強化済みフラグ'] === 0)) {
                 // Check if each keyword is included in the document
                 let isAllKeywordsIncluded = keywords.every(kw => {
                     return Object.values(data).some(v => v.toString().includes(kw));
                 });
-    
+        
                 // If all keywords are included, add the document to searchData
                 if (isAllKeywordsIncluded) {
-                    data.id = doc.id;
                     searchData.push(data);
                 }
-            });
-    
-            // Call the function to create a table
-            createTable(searchData, 'DB', 'search-table');
-    
-            // Store the search result to the local storage
-            localStorage.setItem('DB', JSON.stringify(searchData));
+            }
         });
+        
+        // Call the function to create a table
+        createTable(searchData, 'DB', 'search-table');
+    
+        // Create quantity table
+        let quantities = aggregateMaterialQuantities(searchData);
+        createQuantityTable(quantities, 'quantity-table');
     }
 
     // Assign an event listener to the search button

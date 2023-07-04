@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             // Sort the data by the 'No.' field in ascending order
-            dbData.sort((a, b) => a.No - b.No);
+            dbData.sort((a, b) => a["No."] - b["No."]);
 
             // Store to localStorage
             localStorage.setItem("DB", JSON.stringify(dbData));

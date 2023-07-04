@@ -35,10 +35,20 @@ document.addEventListener("DOMContentLoaded", function() {
     function fetchAndStoreStatus() {
         db.collection("STATUS").get().then((querySnapshot) => {
             let statusData = [];
+            let localStatusData = JSON.parse(localStorage.getItem("STATUS")) || [];
+
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 data.id = doc.id;
-                data["強化済みフラグ"] = 0; // Reset the flag to 0
+
+                // Use the flag value stored in the local storage instead of resetting it
+                let localData = localStatusData.find(item => item.id === data.id);
+                if(localData) {
+                    data["強化済みフラグ"] = localData["強化済みフラグ"];
+                } else {
+                    data["強化済みフラグ"] = 0; // If there's no local data, set the flag to 0
+                }
+                
                 statusData.push(data);
             });
 

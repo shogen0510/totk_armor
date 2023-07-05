@@ -149,12 +149,12 @@ document.addEventListener("DOMContentLoaded", function() {
         } else if(type === 'DB') {
             headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
         }
-
+    
         // Clear out any existing rows
         while (table.firstChild) {
             table.removeChild(table.firstChild);
         }
-
+    
         // Create table headers
         let thead = document.createElement("thead");
         let headerRow = document.createElement("tr");
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-
+    
         // Add table rows
         data.forEach(row => {
             let tr = document.createElement("tr");
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             table.appendChild(tr);
         });
-    }
+    }    
 
     function searchDB(keyword) {
         let dbData = JSON.parse(localStorage.getItem('DB'));

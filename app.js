@@ -167,6 +167,17 @@ document.addEventListener("DOMContentLoaded", function() {
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
+            // Add click listener for sorting
+            th.addEventListener("click", function() {
+                // sort data
+                let sortedData = sortTableData(data, header);
+                // clear table
+                while (table.firstChild) {
+                    table.removeChild(table.firstChild);
+                }
+                // re-create table with sorted data
+                createTable(sortedData, type, tableId);
+            });
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
@@ -199,6 +210,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
         
+    function sortTableData(data, field) {
+        // create a copy of data and sort the copy
+        let sortedData = [...data].sort((a, b) => {
+            if (a[field] < b[field]) {
+                return -1;
+            } else if (a[field] > b[field]) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    
+        return sortedData;
+    }  
+
 
     function searchDB(keyword) {
         let dbData = JSON.parse(localStorage.getItem('DB'));

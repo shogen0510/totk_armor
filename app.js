@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-
     // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
         return db.collection("DB").get().then((querySnapshot) => {
@@ -212,8 +211,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tbody.appendChild(tr);
         }
         table.appendChild(tbody);
-    }
-    
+
         // Add table rows
         data.forEach(row => {
             let tr = document.createElement("tr");

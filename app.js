@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+
     // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
         return db.collection("DB").get().then((querySnapshot) => {
@@ -166,52 +167,11 @@ document.addEventListener("DOMContentLoaded", function() {
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
-            if(header === "防具分類1" && type === "STATUS"){
-                // Create a unique list of "防具分類1" values
-                let categories = Array.from(new Set(data.map(row => row["防具分類1"])));
-                let select = document.createElement("select");
-                // Add an "All" option
-                let option = document.createElement("option");
-                option.value = "All";
-                option.textContent = "All";
-                select.appendChild(option);
-                // Add options for each category
-                categories.forEach(category => {
-                    let option = document.createElement("option");
-                    option.value = category;
-                    option.textContent = category;
-                    select.appendChild(option);
-                });
-                // Add an event listener to the select element
-                select.addEventListener("change", function(){
-                    // If "All" is selected, display all data, otherwise filter the data
-                    if(this.value === "All"){
-                        createTable(dbData, 'STATUS', 'status-table');
-                    } else {
-                        let filteredData = dbData.filter(row => row["防具分類1"] === this.value);
-                        createTable(filteredData, 'STATUS', 'status-table');
-                    }
-                });
-                th.appendChild(select);
-            }
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
     
-        // Create table body
-        let tbody = document.createElement("tbody");
-        for(let i = 0; i < data.length; i++){
-            let tr = document.createElement("tr");
-            for(let j = 0; j < headers.length; j++){
-                let td = document.createElement("td");
-                td.textContent = data[i][headers[j]];
-                tr.appendChild(td);
-            }
-            tbody.appendChild(tr);
-        }
-        table.appendChild(tbody);
-
         // Add table rows
         data.forEach(row => {
             let tr = document.createElement("tr");

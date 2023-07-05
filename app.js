@@ -200,6 +200,20 @@ document.addEventListener("DOMContentLoaded", function() {
         thead.appendChild(headerRow);
         table.appendChild(thead);
     
+        // Create table body
+        let tbody = document.createElement("tbody");
+        for(let i = 0; i < data.length; i++){
+            let tr = document.createElement("tr");
+            for(let j = 0; j < headers.length; j++){
+                let td = document.createElement("td");
+                td.textContent = data[i][headers[j]];
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+    }
+    
         // Add table rows
         data.forEach(row => {
             let tr = document.createElement("tr");

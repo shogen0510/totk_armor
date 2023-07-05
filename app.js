@@ -191,8 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             table.appendChild(tr);
         });
-    }
-        
+    }    
 
     function searchDB(keyword) {
         let dbData = JSON.parse(localStorage.getItem('DB'));

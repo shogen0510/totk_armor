@@ -167,17 +167,34 @@ document.addEventListener("DOMContentLoaded", function() {
         headers.forEach(header => {
             let th = document.createElement("th");
             th.textContent = header;
-            // Add click listener for sorting
-            th.addEventListener("click", function() {
-                // sort data
-                let sortedData = sortTableData(data, header);
-                // clear table
-                while (table.firstChild) {
-                    table.removeChild(table.firstChild);
-                }
-                // re-create table with sorted data
-                createTable(sortedData, type, tableId);
-            });
+            if(header === "防具分類1" && type === "STATUS"){
+                // Create a unique list of "防具分類1" values
+                let categories = Array.from(new Set(data.map(row => row["防具分類1"])));
+                let select = document.createElement("select");
+                // Add an "All" option
+                let option = document.createElement("option");
+                option.value = "All";
+                option.textContent = "All";
+                select.appendChild(option);
+                // Add options for each category
+                categories.forEach(category => {
+                    let option = document.createElement("option");
+                    option.value = category;
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
+                // Add an event listener to the select element
+                select.addEventListener("change", function(){
+                    // If "All" is selected, display all data, otherwise filter the data
+                    if(this.value === "All"){
+                        createTable(dbData, 'STATUS', 'status-table');
+                    } else {
+                        let filteredData = dbData.filter(row => row["防具分類1"] === this.value);
+                        createTable(filteredData, 'STATUS', 'status-table');
+                    }
+                });
+                th.appendChild(select);
+            }
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
@@ -210,21 +227,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
         
-    function sortTableData(data, field) {
-        // create a copy of data and sort the copy
-        let sortedData = [...data].sort((a, b) => {
-            if (a[field] < b[field]) {
-                return -1;
-            } else if (a[field] > b[field]) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    
-        return sortedData;
-    }  
-
 
     function searchDB(keyword) {
         let dbData = JSON.parse(localStorage.getItem('DB'));

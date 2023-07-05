@@ -16,24 +16,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Fetch links from Firestore
     function fetchLinks() {
-        db.collection("armor").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                links[data.name] = data.URL;
-            });
-        });
-
-        db.collection("materials").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                links[data.name] = data.URL;
-            });
-        });
+        return Promise.all([
+            db.collection("armor").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    links[data.name] = data.URL;
+                });
+            }),
+            db.collection("materials").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    links[data.name] = data.URL;
+                });
+            })
+        ]);
     }
 
     // Fetch and store "STATUS" collection to localStorage on load
     function fetchAndStoreStatus() {
-        db.collection("STATUS").get().then((querySnapshot) => {
+        return db.collection("STATUS").get().then((querySnapshot) => {
             let statusData = [];
             let localStatusData = JSON.parse(localStorage.getItem("STATUS")) || [];
 
@@ -63,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
-        db.collection("DB").get().then((querySnapshot) => {
+        return db.collection("DB").get().then((querySnapshot) => {
             let dbData = [];
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
@@ -131,15 +132,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Get data from localStorage
-    if (localStorage.getItem("STATUS")) {
-        dbData = JSON.parse(localStorage.getItem("STATUS"));
-        // Ensure that 'status-table' exists in the DOM before attempting to create it
-        if (document.getElementById('status-table')) {
-            createTable(dbData, 'STATUS', 'status-table');
-        } else {
-            console.error("Unable to find an element with the id 'status-table' in the DOM");
+    Promise.all([
+        fetchLinks(),
+        fetchAndStoreStatus(),
+        fetchAndStoreDB()
+    ]).then(() => {
+        if (localStorage.getItem("STATUS")) {
+            dbData = JSON.parse(localStorage.getItem("STATUS"));
+            if (document.getElementById('status-table')) {
+                createTable(dbData, 'STATUS', 'status-table');
+            } else {
+                console.error("Unable to find an element with the id 'status-table' in the DOM");
+            }
         }
-    }
+    })
 
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);

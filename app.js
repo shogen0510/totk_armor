@@ -80,7 +80,40 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Filter Dropdown creation function
+    function createDropdown(tableId) {
+        let table = document.getElementById(tableId);
+        let dropdown = document.createElement("select");
+        dropdown.id = tableId + "-dropdown";
+        dropdown.innerHTML = `<option value="">すべて</option>`;
+        
+        // Get unique categories from dbData
+        let categories = [...new Set(dbData.map(item => item["防具分類1"]))];
+        
+        categories.forEach(category => {
+            let option = document.createElement("option");
+            option.value = category;
+            option.text = category;
+            dropdown.appendChild(option);
+        });
+
+        table.parentNode.insertBefore(dropdown, table);
+    }
     
+    // Filter function
+    function filterTable() {
+        let dropdown = document.getElementById('status-table-dropdown');
+        let selectedCategory = dropdown.value;
+
+        // Filter the dbData based on the dropdown selection
+        let filteredData = selectedCategory !== "" 
+                            ? dbData.filter(item => item["防具分類1"] === selectedCategory) 
+                            : dbData;
+
+        // Generate table with filtered data
+        createTable(filteredData, 'STATUS', 'status-table');
+    }
+
     // Fetch links and store collections
     fetchLinks();
     fetchAndStoreStatus();
@@ -142,11 +175,12 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
+                createDropdown('status-table');
+                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {
                 console.error("Unable to find an element with the id 'status-table' in the DOM");
             }
         }
-        
     })
 
     function createTable(data, type, tableId) {
@@ -276,42 +310,4 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem('STATUS', JSON.stringify(statusData));
         location.reload();
     });
-
-    // Define button labels
-    const buttonLabels = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
-
-    // Create a div to contain the buttons
-    const buttonDiv = document.createElement('div');
-    buttonDiv.id = 'button-div';
-
-    // Create and append the buttons
-    buttonLabels.forEach(label => {
-        const button = document.createElement('button');
-        button.id = label;
-        button.textContent = label;
-        buttonDiv.appendChild(button);
-    });
-
-    // Append the div containing the buttons to the body
-    document.body.appendChild(buttonDiv);
-
-    // Attach click event to buttons
-    buttonLabels.forEach(label => {
-        document.getElementById(label).addEventListener("click", function() {
-            this.classList.toggle("active");
-            filterTableByActiveButtons();
-        });
-    });
-
-    // Filter table by active buttons
-    function filterTableByActiveButtons() {
-        const activeButtons = document.querySelectorAll('#button-div button.active');
-        const activeLabels = Array.from(activeButtons, button => button.textContent);
-
-        const dbData = JSON.parse(localStorage.getItem("STATUS"));
-
-        const filteredData = dbData.filter(row => activeLabels.includes(row['防具分類1']));
-
-        createTable(filteredData.length ? filteredData : dbData, 'STATUS', 'status-table');
-    }
 });

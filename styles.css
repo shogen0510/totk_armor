@@ -44,12 +44,6 @@ input[type="text"] {
     width: calc(100% - 20px); /* accounting for padding */
 }
 
-#button-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
-  }
-
 button {
     width: 100%;
     border: none;
@@ -85,7 +79,7 @@ table th {
 /* Extra small devices (phones) */
 @media only screen and (max-width: 600px) {
     table {
-      font-size: 12px;
+      font-size: 14px;
     }
 
     table th,

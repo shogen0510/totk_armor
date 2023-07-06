@@ -252,18 +252,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 let isAllKeywordsIncluded = keywords.every(kw => {
                     return searchFields.some(field => data[field].toString().includes(kw));
                 });
-        
+    
                 // If all keywords are included, add the document to searchData
                 if (isAllKeywordsIncluded) {
                     searchData.push(data);
                 }
             }
         });
-
+    
         // Create a table with the search results
         createTable(searchData, 'DB', 'search-results-table');
+    
+        // Create a quantity table based on the search results
+        let quantities = aggregateMaterialQuantities(searchData);
+        createQuantityTable(quantities, 'quantity-table');
     }
-
+    
+    // Add event listener to search input field
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        searchDB(e.target.value);
+    });    
+    
     // Get data from localStorage
     Promise.all([
         fetchLinks(),
@@ -288,10 +297,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     })
 
-    // Add event listener to search input field
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        searchDB(e.target.value);
-    });
 
     // Event Listener for Save button
     document.getElementById('saveBtn').addEventListener('click', function() {

@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-
     // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
         return db.collection("DB").get().then((querySnapshot) => {
@@ -202,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let headerRow = document.createElement("tr");
         headers.forEach(header => {
             let th = document.createElement("th");
-            th.textContent = header;
+            th.textContent =header;
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
@@ -234,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function() {
             table.appendChild(tr);
         });
     }
-        
 
     function searchDB(keyword) {
         let dbData = JSON.parse(localStorage.getItem('DB'));
@@ -261,22 +259,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         });
-        
-        // Call the function to create a table
-        createTable(searchData, 'DB', 'search-table');
-    
-        // Create quantity table
-        let quantities = aggregateMaterialQuantities(searchData);
-        createQuantityTable(quantities, 'quantity-table');
+
+        // Create a table with the search results
+        createTable(searchData, 'DB', 'search-results-table');
     }
 
-    // Assign an event listener to the search button
-    document.getElementById('searchBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        let keyword = document.getElementById('search').value;
-        if(keyword.trim() !== '') {
-            searchDB(keyword);
-        }
+    // Add event listener to search input field
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        searchDB(e.target.value);
     });
 
     // Event Listener for Save button
@@ -301,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Event Listener for Clear button
     document.getElementById('clearBtn').addEventListener('click', function() {
-        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+        let statusData = JSON.parse(localStorage.getItem(''STATUS'));
 
         statusData.forEach(row => {
             row['強化済みフラグ'] = 0;

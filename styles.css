@@ -83,7 +83,7 @@ table th {
 /* Extra small devices (phones) */
 @media only screen and (max-width: 600px) {
     table {
-      font-size: 14px;
+      font-size: 12px;
     }
 
     table th,

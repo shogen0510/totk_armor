@@ -5,26 +5,29 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
     overflow-x: hidden; /* Prevent horizontal scroll */
-    background-color: #f3f3f3;
+    background-color: #fff;
+    color: #333;
 }
 
 #searchForm {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 #searchInput, #searchForm input[type="submit"] {
     margin: 5px;
-    padding: 5px;
+    padding: 10px;
     font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 #app {
     width: 100%;
-    padding: 10px; /* add some padding to prevent content sticking to the edges */
+    padding: 20px;
     margin: auto;
 }
 
@@ -36,26 +39,27 @@ input[type="checkbox"] {
 
 input[type="text"], button {
     padding: 10px;
-    font-size: 16px; /* increase font size for better visibility */
+    font-size: 16px;
     margin: 10px 0;
 }
 
 input[type="text"] {
-    width: calc(100% - 20px); /* accounting for padding */
+    width: calc(100% - 20px);
+    border: 1px solid #ccc;
 }
 
 button {
     width: 100%;
     border: none;
     color: white;
-    background-color: #067AFE; 
+    background-color: #0070c9;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 button:hover {
-    background-color: #015ABB; /* darken color on hover */
+    background-color: #005999;
 }
 
 table {
@@ -73,10 +77,9 @@ table, th, td {
 }
 
 table th {
-    background-color: #f2f2f2;
+    background-color: #f8f8f8;
 }
 
-/* Extra small devices (phones) */
 @media only screen and (max-width: 600px) {
     table {
       font-size: 14px;
@@ -90,31 +93,28 @@ table th {
 
 a {
     text-decoration: none;
+    color: #0070c9;
     font-weight: bold;
 }
 
-/* Small devices (portrait tablets and large phones) */
 @media only screen and (min-width: 600px) {
     #app {
         max-width: 600px;
     }
 }
 
-/* Medium devices (landscape tablets) */
 @media only screen and (min-width: 768px) {
     #app {
         max-width: 768px;
     }
 }
 
-/* Large devices (laptops/desktops) */
 @media only screen and (min-width: 992px) {
     #app {
         max-width: 992px;
     }
 }
 
-/* Extra large devices (large laptops and desktops) */
 @media only screen and (min-width: 1200px) {
     #app {
         max-width: 1200px;

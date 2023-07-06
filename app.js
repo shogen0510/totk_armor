@@ -80,43 +80,52 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];  // ボタンの項目
-    let activeCategories = new Set();  // アクティブなボタンの項目を保持するSet
-
-
-    // Filter Dropdown creation function
-    function createDropdown(tableId) {
-        let table = document.getElementById(tableId);
-        let dropdown = document.createElement("select");
-        dropdown.id = tableId + "-dropdown";
-        dropdown.innerHTML = `<option value="">すべて</option>`;
-        
-        // Get unique categories from dbData
-        let categories = [...new Set(dbData.map(item => item["防具分類1"]))];
-        
-        categories.forEach(category => {
-            let option = document.createElement("option");
-            option.value = category;
-            option.text = category;
-            dropdown.appendChild(option);
-        });
-
-        table.parentNode.insertBefore(dropdown, table);
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
+        let activeCategories = new Set();
     
-    // Filter function
-    function filterTable() {
-        let dropdown = document.getElementById('status-table-dropdown');
-        let selectedCategory = dropdown.value;
+        function createButtons() {
+            let buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "table";
+            buttonContainer.style.marginBottom = "20px";
+    
+            categories.forEach(category => {
+                let button = document.createElement("button");
+                button.innerText = category;
+                button.style.display = "table-cell";
+                button.style.padding = "10px";
+                button.onclick = function() {
+                    if (activeCategories.has(category)) {
+                        activeCategories.delete(category);
+                        button.style.backgroundColor = ''; //reset button color
+                    } else {
+                        activeCategories.add(category);
+                        button.style.backgroundColor = 'blue'; // change button color when active
+                    }
+                    filterTable();
+                };
+                buttonContainer.appendChild(button);
+            });
+    
+            let searchForm = document.getElementById('search-form');
+            searchForm.parentNode.insertBefore(buttonContainer, searchForm.nextSibling);
+        }
+    
+        function filterTable() {
+            let dbData = JSON.parse(localStorage.getItem('DB'));
+    
+            if (activeCategories.size > 0) {
+                dbData = dbData.filter(item => activeCategories.has(item["防具分類1"]));
+            }
+    
+            createTable(dbData, 'DB', 'status-table');
+        }
+    
+        createButtons();
+    });
+    
 
-        // Filter the dbData based on the dropdown selection
-        let filteredData = selectedCategory !== "" 
-                            ? dbData.filter(item => item["防具分類1"] === selectedCategory) 
-                            : dbData;
-
-        // Generate table with filtered data
-        createTable(filteredData, 'STATUS', 'status-table');
-    }
+    
 
     // Fetch links and store collections
     fetchLinks();
@@ -179,9 +188,6 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
-                createDropdown('status-table');
-                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
-            } else {
                 console.error("Unable to find an element with the id 'status-table' in the DOM");
             }
         }

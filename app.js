@@ -264,6 +264,30 @@ document.addEventListener("DOMContentLoaded", function() {
         createTable(searchData, 'DB', 'search-results-table');
     }
 
+    // Get data from localStorage
+    Promise.all([
+        fetchLinks(),
+        fetchAndStoreStatus(),
+        fetchAndStoreDB()
+    ]).then(() => {
+        if (localStorage.getItem("STATUS")) {
+            dbData = JSON.parse(localStorage.getItem("STATUS"));
+            if (document.getElementById('status-table')) {
+                createTable(dbData, 'STATUS', 'status-table');
+                createDropdown('status-table');
+                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
+            } else {
+                console.error("Unable to find an element with the id 'status-table' in the DOM");
+            }
+        }
+
+        if (localStorage.getItem("DB")) {
+            let dbData = JSON.parse(localStorage.getItem("DB"));
+            let quantities = aggregateMaterialQuantities(dbData);
+            createQuantityTable(quantities, 'quantity-table');
+        }
+    })
+
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
         searchDB(e.target.value);

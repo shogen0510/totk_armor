@@ -272,30 +272,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('searchInput').addEventListener('input', function(e) {
         searchDB(e.target.value);
     });    
-    
-    // Get data from localStorage
-    Promise.all([
-        fetchLinks(),
-        fetchAndStoreStatus(),
-        fetchAndStoreDB()
-    ]).then(() => {
-        if (localStorage.getItem("STATUS")) {
-            dbData = JSON.parse(localStorage.getItem("STATUS"));
-            if (document.getElementById('status-table')) {
-                createTable(dbData, 'STATUS', 'status-table');
-                createDropdown('status-table');
-                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
-            } else {
-                console.error("Unable to find an element with the id 'status-table' in the DOM");
-            }
-        }
-
-        if (localStorage.getItem("DB")) {
-            let dbData = JSON.parse(localStorage.getItem("DB"));
-            let quantities = aggregateMaterialQuantities(dbData);
-            createQuantityTable(quantities, 'quantity-table');
-        }
-    })
 
 
     // Event Listener for Save button

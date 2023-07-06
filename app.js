@@ -80,6 +80,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];  // ボタンの項目
+    let activeCategories = new Set();  // アクティブなボタンの項目を保持するSet
+
+
     // Filter Dropdown creation function
     function createDropdown(tableId) {
         let table = document.getElementById(tableId);

@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Event Listener for Clear button
     document.getElementById('clearBtn').addEventListener('click', function() {
-        let statusData = JSON.parse(localStorage.getItem(''STATUS'));
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
 
         statusData.forEach(row => {
             row['強化済みフラグ'] = 0;

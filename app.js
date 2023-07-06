@@ -80,49 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
-    let activeCategories = new Set();
-
-    function createButtons() {
-        let buttonContainer = document.createElement("div");
-        buttonContainer.style.display = "table";
-        buttonContainer.style.marginBottom = "20px";
-
-        categories.forEach(category => {
-            let button = document.createElement("button");
-            button.innerText = category;
-            button.style.display = "table-cell";
-            button.style.padding = "10px";
-            button.onclick = function() {
-                if (activeCategories.has(category)) {
-                    activeCategories.delete(category);
-                    button.style.backgroundColor = ''; //reset button color
-                } else {
-                    activeCategories.add(category);
-                    button.style.backgroundColor = 'blue'; // change button color when active
-                }
-                filterTable();
-            };
-            buttonContainer.appendChild(button);
-        });
-
-        let searchForm = document.getElementById('search-form');
-        searchForm.parentNode.insertBefore(buttonContainer, searchForm.nextSibling);
-    }
-
-    function filterTable() {
-        let dbData = JSON.parse(localStorage.getItem('DB'));
-
-        if (activeCategories.size > 0) {
-            dbData = dbData.filter(item => activeCategories.has(item["防具分類1"]));
-        }
-
-        createTable(dbData, 'DB', 'status-table');
-    }
-
-    createButtons();
-
-
+    
     // Fetch links and store collections
     fetchLinks();
     fetchAndStoreStatus();
@@ -316,4 +274,46 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem('STATUS', JSON.stringify(statusData));
         location.reload();
     });
+
+    let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
+    let activeCategories = new Set();
+
+    function createButtons() {
+        let buttonContainer = document.createElement("div");
+        buttonContainer.style.display = "table";
+        buttonContainer.style.marginBottom = "20px";
+
+        categories.forEach(category => {
+            let button = document.createElement("button");
+            button.innerText = category;
+            button.style.display = "table-cell";
+            button.style.padding = "10px";
+            button.onclick = function() {
+                if (activeCategories.has(category)) {
+                    activeCategories.delete(category);
+                    button.style.backgroundColor = ''; //reset button color
+                } else {
+                    activeCategories.add(category);
+                    button.style.backgroundColor = 'blue'; // change button color when active
+                }
+                filterTable();
+            };
+            buttonContainer.appendChild(button);
+        });
+
+        let searchForm = document.getElementById('searchForm');
+        searchForm.parentNode.insertBefore(buttonContainer, searchForm.nextSibling);
+    }
+
+    function filterTable() {
+        let dbData = JSON.parse(localStorage.getItem('DB'));
+
+        if (activeCategories.size > 0) {
+            dbData = dbData.filter(item => activeCategories.has(item["防具分類1"]));
+        }
+
+        createTable(dbData, 'DB', 'status-table');
+    }
+
+    createButtons();
 });

@@ -277,48 +277,41 @@ document.addEventListener("DOMContentLoaded", function() {
         location.reload();
     });
 
-    let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
-    let activeCategories = new Set();
+    // Define button labels
+    const buttonLabels = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
 
-    window.addEventListener("load", function() {
+    // Create a div to contain the buttons
+    const buttonDiv = document.createElement('div');
+    buttonDiv.id = 'button-div';
 
-    function createButtons() {
-        let buttonContainer = document.createElement("div");
-        buttonContainer.style.display = "table";
-        buttonContainer.style.marginBottom = "20px";
-
-        categories.forEach(category => {
-            let button = document.createElement("button");
-            button.innerText = category;
-            button.style.display = "table-cell";
-            button.style.padding = "10px";
-            button.onclick = function() {
-                if (activeCategories.has(category)) {
-                    activeCategories.delete(category);
-                    button.style.backgroundColor = ''; //reset button color
-                } else {
-                    activeCategories.add(category);
-                    button.style.backgroundColor = 'blue'; // change button color when active
-                }
-                filterTable();
-            };
-            buttonContainer.appendChild(button);
-        });
-
-        let searchForm = document.getElementById('searchForm');
-        searchForm.parentNode.insertBefore(buttonContainer, searchForm.nextSibling);
-    }
-
-    function filterTable() {
-        let dbData = JSON.parse(localStorage.getItem('DB'));
-
-        if (activeCategories.size > 0) {
-            dbData = dbData.filter(item => activeCategories.has(item["防具分類1"]));
-        }
-
-        createTable(dbData, 'DB', 'status-table');
-    }
-
-    createButtons();
+    // Create and append the buttons
+    buttonLabels.forEach(label => {
+        const button = document.createElement('button');
+        button.id = label;
+        button.textContent = label;
+        buttonDiv.appendChild(button);
     });
+
+    // Append the div containing the buttons to the body
+    document.body.appendChild(buttonDiv);
+
+    // Attach click event to buttons
+    buttonLabels.forEach(label => {
+        document.getElementById(label).addEventListener("click", function() {
+            this.classList.toggle("active");
+            filterTableByActiveButtons();
+        });
+    });
+
+    // Filter table by active buttons
+    function filterTableByActiveButtons() {
+        const activeButtons = document.querySelectorAll('#button-div button.active');
+        const activeLabels = Array.from(activeButtons, button => button.textContent);
+
+        const dbData = JSON.parse(localStorage.getItem("STATUS"));
+
+        const filteredData = dbData.filter(row => activeLabels.includes(row['防具分類1']));
+
+        createTable(filteredData.length ? filteredData : dbData, 'STATUS', 'status-table');
+    }
 });

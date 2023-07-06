@@ -142,9 +142,11 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
+            } else {
                 console.error("Unable to find an element with the id 'status-table' in the DOM");
             }
         }
+        
     })
 
     function createTable(data, type, tableId) {
@@ -278,6 +280,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let categories = ["ハイリア", "息吹の勇者", "ゾーラ", "熱砂"];
     let activeCategories = new Set();
 
+    window.addEventListener("load", function() {
+
     function createButtons() {
         let buttonContainer = document.createElement("div");
         buttonContainer.style.display = "table";
@@ -316,4 +320,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     createButtons();
+    });
 });

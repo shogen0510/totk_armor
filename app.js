@@ -233,11 +233,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     dummyInput.className = "ECM_CheckboxInput-DummyInput";
                     label.appendChild(dummyInput);
 
-                    let labelText = document.createElement("span");
-                    labelText.className = "ECM_CheckboxInput-LabelText";
-                    labelText.textContent = row['防具強化Lv'].toString();
-                    label.appendChild(labelText);
-
                     td.appendChild(label);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");

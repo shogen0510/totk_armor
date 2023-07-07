@@ -80,8 +80,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Filter Dropdown creation function
-    function createDropdown(tableId) {
+    function createDropdown(tableId, headerText) {
         let table = document.getElementById(tableId);
+        let headers = Array.from(table.getElementsByTagName("th"));
+        let targetHeader = headers.find(header => header.textContent === headerText);
+
+        if (!targetHeader) {
+            console.error(`Could not find header with text '${headerText}' in table '${tableId}'`);
+            return;
+        }
+
         let dropdown = document.createElement("select");
         dropdown.id = tableId + "-dropdown";
         dropdown.innerHTML = `<option value="">すべて</option>`;
@@ -96,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdown.appendChild(option);
         });
 
-        table.parentNode.insertBefore(dropdown, table);
+        targetHeader.appendChild(dropdown);
     }
     
     // Filter function
@@ -180,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
-                createDropdown('status-table');
+                createDropdown('status-table', "防具分類1");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {
                 console.error("Unable to find an element with the id 'status-table' in the DOM");

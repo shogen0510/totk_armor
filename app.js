@@ -122,6 +122,51 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
 
+    // チェックボックスの作成関数
+    function createCheckboxes(tableId) {
+        let table = document.getElementById(tableId);
+        let checkboxContainer = document.getElementById(tableId + "-checkboxes");
+
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainer) {
+            checkboxContainer.remove();
+        }
+        checkboxContainer = document.createElement("div");
+        checkboxContainer.id = tableId + "-checkboxes";
+        
+        // dbDataからユニークなカテゴリを取得
+        let categories = [...new Set(dbData.map(item => item["防具分類"]))];
+        
+        categories.forEach(category => {
+            let checkboxWrapper = document.createElement("div");
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = category;
+            checkbox.name = category;
+            
+            let label = document.createElement("label");
+            label.htmlFor = category;
+            label.appendChild(document.createTextNode(category));
+
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            checkboxContainer.appendChild(checkboxWrapper);
+
+            // チェックボックスが変更された場合に実行
+            checkbox.addEventListener('change', function() {
+                let selectedCategories = [];
+                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedCategories.push(checkbox.name);
+                    }
+                });
+                searchDB(selectedCategories);
+            });
+        });
+        table.parentNode.insertBefore(checkboxContainer, table);
+    }
+
     // Fetch links and store collections
     fetchLinks();
     fetchAndStoreStatus();
@@ -189,6 +234,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
+                createCheckboxes('status-table');
                 createDropdown('status-table', "防具分類");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {
@@ -249,34 +295,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(keyword) {
+    function searchDB(categories) {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
     
         // Define the fields to be included in the search
-        let searchFields = ["Lv", "必要素材", "防具", "防具分類"];
-    
-        // Split the keyword by space (both full-width and half-width) to get an array of keywords
-        let keywords = keyword.split(/[\s\u3000]/);
+        let searchFields = ["防具分類"];
     
         dbData.forEach(data => {
             // Only look at items that have not been enhanced
             if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
-                // Check if each keyword is included in the searchFields of the document
-                let isAllKeywordsIncluded = keywords.every(kw => {
-                    // If the keyword starts with "-", check that it's NOT included in the data
-                    if (kw.startsWith("-")) {
-                        return searchFields.every(field => !data[field].toString().includes(kw.substring(1)));
-                    }
-                    // Otherwise, check that it IS included in the data
-                    else {
-                        return searchFields.some(field => data[field].toString().includes(kw));
-                    }
+                // Check if each category is included in the searchFields of the document
+                let isAnyCategoryIncluded = categories.some(cat => {
+                    return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // If all keywords are included, add the document to searchData
-                if (isAllKeywordsIncluded) {
+                // If any category is included, add the document to searchData
+                if (isAnyCategoryIncluded) {
                     searchData.push(data);
                 }
             }
@@ -291,8 +327,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // Get the quantity table element
         let quantityTable = document.getElementById('quantity-table');
     
-        // If the search keyword is empty, hide the quantity table
-        if (keyword === '') {
+        // If no category is selected, hide the quantity table
+        if (categories.length === 0) {
             quantityTable.style.display = 'none';
         } else {
             quantityTable.style.display = 'table';

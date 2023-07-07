@@ -82,30 +82,21 @@ document.addEventListener("DOMContentLoaded", function() {
     // Filter Dropdown creation function
     function createDropdown(tableId) {
         let table = document.getElementById(tableId);
-        
-        let selectDiv = document.createElement("div");
-        selectDiv.classList.add("select");
-    
         let dropdown = document.createElement("select");
         dropdown.id = tableId + "-dropdown";
         dropdown.innerHTML = `<option value="">すべて</option>`;
-            
+        
         // Get unique categories from dbData
         let categories = [...new Set(dbData.map(item => item["防具分類1"]))];
-            
+        
         categories.forEach(category => {
             let option = document.createElement("option");
             option.value = category;
             option.text = category;
             dropdown.appendChild(option);
         });
-    
-        let arrowDiv = document.createElement("div");
-        arrowDiv.classList.add("select__arrow");
-    
-        selectDiv.appendChild(dropdown);
-        selectDiv.appendChild(arrowDiv);
-        table.parentNode.insertBefore(selectDiv, table);
+
+        table.parentNode.insertBefore(dropdown, table);
     }
     
     // Filter function
@@ -228,21 +219,11 @@ document.addEventListener("DOMContentLoaded", function() {
             headers.forEach(header => {
                 let td = document.createElement("td");
                 if (header === '強化済みフラグ' && type === 'STATUS') {
-                    let label = document.createElement("label");
-                    label.classList.add("control");
-                    label.classList.add("control--checkbox");
-                
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
                     checkbox.id = row['防具強化Lv'].toString();
-                    
-                    let indicator = document.createElement("div");
-                    indicator.classList.add("control__indicator");
-                
-                    label.appendChild(checkbox);
-                    label.appendChild(indicator);
-                    td.appendChild(label);
+                    td.appendChild(checkbox);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");
                     link.textContent = row[header];

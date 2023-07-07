@@ -57,7 +57,7 @@ input[type="checkbox"]:after {
     border-width: 0 2px 2px 0;
     transform: translate(-50%, -50%) rotate(-45deg);
     opacity: 0;
-    background: #914c4c
+    background: #914c4c;
     transition: opacity 0.2s ease;
 }
 

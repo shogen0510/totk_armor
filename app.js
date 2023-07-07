@@ -80,17 +80,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Filter Dropdown creation function
-    function createDropdown(tableId, headerText) {
+    function createDropdown(tableId) {
         let table = document.getElementById(tableId);
-        let headers = Array.from(table.getElementsByTagName("th"));
-        let targetHeader = headers.find(header => header.textContent === headerText);
-
-        if (!targetHeader) {
-            console.error(`Could not find header with text '${headerText}' in table '${tableId}'`);
-            return;
+        let dropdown = document.getElementById(tableId + "-dropdown");
+    
+        // if dropdown already exists, remove it
+        if (dropdown) {
+            dropdown.remove();
         }
-
-        let dropdown = document.createElement("select");
+        dropdown = document.createElement("select");
         dropdown.id = tableId + "-dropdown";
         dropdown.innerHTML = `<option value="">すべて</option>`;
         
@@ -103,22 +101,25 @@ document.addEventListener("DOMContentLoaded", function() {
             option.text = category;
             dropdown.appendChild(option);
         });
-
-        targetHeader.appendChild(dropdown);
+    
+        table.parentNode.insertBefore(dropdown, table);
     }
     
     // Filter function
     function filterTable() {
         let dropdown = document.getElementById('status-table-dropdown');
         let selectedCategory = dropdown.value;
-
+    
         // Filter the dbData based on the dropdown selection
         let filteredData = selectedCategory !== "" 
                             ? dbData.filter(item => item["防具分類1"] === selectedCategory) 
                             : dbData;
-
+    
         // Generate table with filtered data
         createTable(filteredData, 'STATUS', 'status-table');
+        createDropdown('status-table');
+        document.getElementById('status-table-dropdown').value = selectedCategory;
+        document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
 
     // Fetch links and store collections

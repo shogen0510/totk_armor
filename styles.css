@@ -30,10 +30,35 @@ body {
     color: #333;
 }
 
+/* Checkbox Styles */
 input[type="checkbox"] {
-    -webkit-appearance: checkbox;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     width: 20px;
     height: 20px;
+    border-radius: 50%;
+    outline: none;
+    border: 1px solid #333;
+    position: relative;
+}
+
+input[type="checkbox"]:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+input[type="checkbox"]:checked:before {
+    opacity: 1;
 }
 
 input[type="text"], button {
@@ -67,8 +92,8 @@ table {
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: #f0f0f0; /* light gray */
-    color: #333; /* dark gray */
+    background-color: #cdcdcd; /* light gray */
+    color: #2d2d2d; /* dark gray */
 }
 
 th, td {
@@ -77,8 +102,8 @@ th, td {
 }
 
 table th {
-    background-color: #333; /* dark gray */
-    color: #ccc; /* light gray */
+    background-color: #525252; /* dark gray */
+    color: #dddddd; /* light gray */
 }
 
 /* Extra small devices (phones) */

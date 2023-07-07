@@ -41,23 +41,24 @@ input[type="checkbox"] {
     outline: none;
     border: 1px solid #333;
     position: relative;
+    background: #fff;
 }
 
-input[type="checkbox"]:before {
-    content: '';
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+input[type="checkbox"]:after {
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #333;
+    width: 60%;
+    height: 30%;
+    border: solid;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
     opacity: 0;
     transition: opacity 0.2s ease;
 }
 
-input[type="checkbox"]:checked:before {
+input[type="checkbox"]:checked:after {
     opacity: 1;
 }
 
@@ -92,8 +93,8 @@ table {
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: #cdcdcd; /* light gray */
-    color: #2d2d2d; /* dark gray */
+    background-color: #dddddd; /* light gray */
+    color: #222222; /* dark gray */
 }
 
 th, td {
@@ -102,7 +103,7 @@ th, td {
 }
 
 table th {
-    background-color: #525252; /* dark gray */
+    background-color: #555555; /* dark gray */
     color: #dddddd; /* light gray */
 }
 

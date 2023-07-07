@@ -192,9 +192,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let table = document.getElementById(tableId);
         let headers;
         if(type === 'STATUS'){
-            headers = ["防具", "防具分類1", "強化Lv", "強化済みフラグ"];
+            headers = ["防具分類1", "防具", "強化Lv", "強化済みフラグ"];
         } else if(type === 'DB') {
-            headers = ["防具", "防具分類1", "強化Lv", "必要素材", "必要数量"];
+            headers = ["防具分類1", "防具", "強化Lv", "必要素材", "必要数量"];
         }
     
         // Clear out any existing rows

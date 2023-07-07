@@ -54,7 +54,7 @@ input[type="checkbox"]:after {
     border-bottom: 3px solid;
     border-left: 3px solid;
     border-color:  #fff;
-    /*border-width: 0 2px 2px 0;*/
+    border-width: 0 2px 2px 0;
     transform: translate(-50%, -50%) rotate(-45deg);
     opacity: 0;
     background: #914c4c

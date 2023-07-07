@@ -1,0 +1,122 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    background-color: #ffffff;
+}
+
+#searchForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#searchInput, #searchForm input[type="submit"] {
+    margin: 5px;
+    padding: 5px;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+#app {
+    width: 100%;
+    padding: 20px; /* add some padding to prevent content sticking to the edges */
+    margin: auto;
+    color: #333;
+}
+
+input[type="text"], button {
+    padding: 10px;
+    font-size: 16px; /* increase font size for better visibility */
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+input[type="text"] {
+    width: calc(100% - 20px); /* accounting for padding */
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    border: none;
+    color: white;
+    background-color: #0070c9; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #005999; /* darken color on hover */
+}
+
+table {
+    width: 100%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #ececec; /* light gray */
+    color: #2c2c2c; /* dark gray */
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #2c2c2c; /* dark gray */
+    color: #ececec; /* light gray */
+}
+
+/* Extra small devices (phones) */
+@media only screen and (max-width: 600px) {
+    table {
+      font-size: 12px;
+    }
+
+    table th,
+    table td {
+      padding: 4px;
+    }
+}
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #0070c9;
+}
+
+/* Small devices (portrait tablets and large phones) */
+@media only screen and (min-width: 600px) {
+    #app {
+        max-width: 600px;
+    }
+}
+
+/* Medium devices (landscape tablets) */
+@media only screen and (min-width: 768px) {
+    #app {
+        max-width: 768px;
+    }
+}
+
+/* Large devices (laptops/desktops) */
+@media only screen and (min-width: 992px) {
+    #app {
+        max-width: 992px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops) */
+@media only screen and (min-width: 1200px) {
+    #app {
+        max-width: 1200px;
+    }
+}

@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Use the flag value stored in the local storage instead of resetting it
                 let localData = localStatusData.find(item => item.id === data.id);
                 if(localData) {
-                    data["強化済みフラグ"] = localData["強化済みフラグ"];
+                    data["強化済"] = localData["強化済"];
                 } else {
-                    data["強化済みフラグ"] = 0; // If there's no local data, set the flag to 0
+                    data["強化済"] = 0; // If there's no local data, set the flag to 0
                 }
                 
                 statusData.push(data);
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
         dropdown.innerHTML = `<option value="">すべて</option>`;
         
         // Get unique categories from dbData
-        let categories = [...new Set(dbData.map(item => item["防具分類1"]))];
+        let categories = [...new Set(dbData.map(item => item["防具分類"]))];
         
         categories.forEach(category => {
             let option = document.createElement("option");
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Filter the dbData based on the dropdown selection
         let filteredData = selectedCategory !== "" 
-                            ? dbData.filter(item => item["防具分類1"] === selectedCategory) 
+                            ? dbData.filter(item => item["防具分類"] === selectedCategory) 
                             : dbData;
     
         // Generate table with filtered data
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
-                createDropdown('status-table', "防具分類1");
+                createDropdown('status-table', "防具分類");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {
                 console.error("Unable to find an element with the id 'status-table' in the DOM");
@@ -201,9 +201,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let table = document.getElementById(tableId);
         let headers;
         if(type === 'STATUS'){
-            headers = ["防具分類1", "防具", "強化Lv", "強化済みフラグ"];
+            headers = ["防具分類", "防具", "Lv", "強化済"];
         } else if(type === 'DB') {
-            headers = ["防具分類1", "防具", "強化Lv", "必要素材", "必要数量"];
+            headers = ["防具分類", "防具", "Lv", "必要素材", "必要数量"];
         }
     
         // Clear out any existing rows
@@ -227,11 +227,11 @@ document.addEventListener("DOMContentLoaded", function() {
             let tr = document.createElement("tr");
             headers.forEach(header => {
                 let td = document.createElement("td");
-                if (header === '強化済みフラグ' && type === 'STATUS') {
+                if (header === '強化済' && type === 'STATUS') {
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = row[header];
-                    checkbox.id = row['防具強化Lv'].toString();
+                    checkbox.id = row['防具Lv'].toString();
                     td.appendChild(checkbox);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");
@@ -255,14 +255,14 @@ document.addEventListener("DOMContentLoaded", function() {
         let searchData = [];
     
         // Define the fields to be included in the search
-        let searchFields = ["強化Lv", "必要素材", "防具", "防具分類1"];
+        let searchFields = ["Lv", "必要素材", "防具", "防具分類"];
     
         // Split the keyword by space (both full-width and half-width) to get an array of keywords
         let keywords = keyword.split(/[\s\u3000]/);
     
         dbData.forEach(data => {
             // Only look at items that have not been enhanced
-            if (statusData.some(status => status['防具強化Lv'] === data['防具強化Lv'] && status['強化済みフラグ'] === 0)) {
+            if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
                 // Check if each keyword is included in the searchFields of the document
                 let isAllKeywordsIncluded = keywords.every(kw => {
                     return searchFields.some(field => data[field].toString().includes(kw));
@@ -304,9 +304,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
 
         checkboxes.forEach(cb => {
-            let index = statusData.findIndex(row => row['防具強化Lv'].toString() === cb.id);
+            let index = statusData.findIndex(row => row['防具Lv'].toString() === cb.id);
             if (index > -1) {
-                statusData[index]['強化済みフラグ'] = cb.checked ? 1 : 0;
+                statusData[index]['強化済'] = cb.checked ? 1 : 0;
             }
         });
 
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
 
         statusData.forEach(row => {
-            row['強化済みフラグ'] = 0;
+            row['強化済'] = 0;
         });
 
         localStorage.setItem('STATUS', JSON.stringify(statusData));

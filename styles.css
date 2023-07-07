@@ -75,6 +75,57 @@ table th {
     color: #ececec; /* light gray */
 }
 
+.control {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    /* you can change the style as you want here */
+}
+
+.control input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.control__indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #ccc;
+    /* you can change the style as you want here */
+}
+
+.control:hover input ~ .control__indicator {
+    background-color: #bbb;
+}
+
+.control input:checked ~ .control__indicator {
+    background-color: #2196F3;
+}
+
+.select {
+    position: relative;
+    display: inline-block;
+    /* you can change the style as you want here */
+}
+
+.select select {
+    display: none; /*hide original SELECT element: */
+}
+
+.select__arrow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+    /* you can change the style as you want here */
+}
+
 /* Extra small devices (phones) */
 @media only screen and (max-width: 600px) {
     table {

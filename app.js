@@ -219,11 +219,31 @@ document.addEventListener("DOMContentLoaded", function() {
             headers.forEach(header => {
                 let td = document.createElement("td");
                 if (header === '強化済みフラグ' && type === 'STATUS') {
+                    let label = document.createElement("label");
+                    label.className = "cbx";
+                
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
+                    checkbox.className = "inp-cbx";
                     checkbox.checked = row[header];
                     checkbox.id = row['防具強化Lv'].toString();
-                    td.appendChild(checkbox);
+                    label.appendChild(checkbox);
+                
+                    let span1 = document.createElement("span");
+                    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("width", "12px");
+                    svg.setAttribute("height", "10px");
+                    svg.setAttribute("viewBox", "0 0 12 10");
+                    let polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                    polyline.setAttribute("points", "1.5 6 4.5 9 10.5 1");
+                    svg.appendChild(polyline);
+                    span1.appendChild(svg);
+                    label.appendChild(span1);
+                
+                    let span2 = document.createElement("span");
+                    label.appendChild(span2);
+                
+                    td.appendChild(label);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");
                     link.textContent = row[header];

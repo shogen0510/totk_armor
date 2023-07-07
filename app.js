@@ -219,21 +219,11 @@ document.addEventListener("DOMContentLoaded", function() {
             headers.forEach(header => {
                 let td = document.createElement("td");
                 if (header === '強化済みフラグ' && type === 'STATUS') {
-                    let label = document.createElement("label");
-                    label.className = "ECM_CheckboxInput";
-
                     let checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
-                    checkbox.className = "ECM_CheckboxInput-Input";
                     checkbox.checked = row[header];
                     checkbox.id = row['防具強化Lv'].toString();
-                    label.appendChild(checkbox);
-
-                    let dummyInput = document.createElement("span");
-                    dummyInput.className = "ECM_CheckboxInput-DummyInput";
-                    label.appendChild(dummyInput);
-
-                    td.appendChild(label);
+                    td.appendChild(checkbox);
                 } else if ((header === '防具' || header === '必要素材') && links[row[header]]) {
                     let link = document.createElement("a");
                     link.textContent = row[header];

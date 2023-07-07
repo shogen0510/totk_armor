@@ -31,73 +31,36 @@ body {
 }
 
 /* Checkbox Styles */
-.ECM_CheckboxInput {
-    padding: 12px 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  .ECM_CheckboxInput-Input {
-    margin: 0;
-    width: 0;
-    opacity: 0;
-  }
-  .ECM_CheckboxInput:hover{
-    background: rgba(0,0,0,.05) !important;
-  }
-  .ECM_CheckboxInput:hover > .ECM_CheckboxInput-DummyInput{
-    transform: scale(1.1);
-  }
-  .ECM_CheckboxInput-Input:focus + .ECM_CheckboxInput-DummyInput{
-    transform: scale(1.1);
-  }
-  .ECM_CheckboxInput-Input:checked + .ECM_CheckboxInput-DummyInput {
-    background: rgba(107, 26, 250, 1);
-  }
-  .ECM_CheckboxInput-Input:checked + .ECM_CheckboxInput-DummyInput::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 35%;
-    height: 4px;
-    border-radius: 2px;
-    transform: translate(-6px, 5px) rotateZ(-135deg);
-    transform-origin: 2px 2px;
-    background: #FFFFFF;
-  }
-  .ECM_CheckboxInput-Input:checked + .ECM_CheckboxInput-DummyInput::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 70%;
-    height: 4px;
-    border-radius: 2px;
-    transform: translate(-6px, 5px) rotateZ(-45deg);
-    transform-origin: 2px 2px;
-    background: #FFFFFF;
-  }
-  .ECM_CheckboxInput-DummyInput {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 32px;
-    height: 32px;
-    border: solid 2px transparent;
-    background: rgba(0, 0, 0, .15);
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    transition: all .15s linear;
-  }
-  .ECM_CheckboxInput-LabelText {
-    margin-left: 12px;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-  }
+    outline: none;
+    border: 1px solid #333;
+    position: relative;
+    background: #fff;
+}
+
+input[type="checkbox"]:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 30%;
+    border: solid;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+input[type="checkbox"]:checked:after {
+    opacity: 1;
+}
 
 input[type="text"], button {
     padding: 10px;

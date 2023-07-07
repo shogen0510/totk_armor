@@ -7,7 +7,7 @@
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     overflow-x: hidden; /* Prevent horizontal scroll */
-    background-color: #D1D7DC;
+    background-color: #ffffff;
 }
 
 #searchForm {
@@ -39,7 +39,7 @@ input[type="checkbox"] {
     height: 20px;
     border-radius: 50%;
     outline: none;
-    border: 1px solid #333;
+    border: 1px solid #777;
     position: relative;
     background: #fff;
 }
@@ -51,10 +51,13 @@ input[type="checkbox"]:after {
     left: 50%;
     width: 60%;
     height: 30%;
-    border: solid;
-    border-width: 0 2px 2px 0;
-    transform: translate(-50%, -50%) rotate(45deg);
+    border-bottom: 3px solid;
+    border-left: 3px solid;
+    border-color:  #fff;
+    /*border-width: 0 2px 2px 0;*/
+    transform: translate(-50%, -50%) rotate(-45deg);
     opacity: 0;
+    background: #914c4c
     transition: opacity 0.2s ease;
 }
 

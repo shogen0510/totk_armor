@@ -30,41 +30,6 @@ body {
     color: #333;
 }
 
-/* Checkbox Styles */
-input[type="checkbox"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    outline: none;
-    border: 1px solid #777;
-    position: relative;
-    background: #fff;
-}
-
-input[type="checkbox"]:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60%;
-    height: 30%;
-    border-bottom: 3px solid;
-    border-left: 3px solid;
-    border-color:  #fff;
-    border-width: 0 2px 2px 0;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    opacity: 0;
-    background: #914c4c;
-    transition: opacity 0.2s ease;
-}
-
-input[type="checkbox"]:checked:after {
-    opacity: 1;
-}
-
 input[type="text"], button {
     padding: 10px;
     font-size: 16px; /* increase font size for better visibility */

@@ -265,7 +265,14 @@ document.addEventListener("DOMContentLoaded", function() {
             if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
                 // Check if each keyword is included in the searchFields of the document
                 let isAllKeywordsIncluded = keywords.every(kw => {
-                    return searchFields.some(field => data[field].toString().includes(kw));
+                    // If the keyword starts with "-", check that it's NOT included in the data
+                    if (kw.startsWith("-")) {
+                        return searchFields.every(field => !data[field].toString().includes(kw.substring(1)));
+                    }
+                    // Otherwise, check that it IS included in the data
+                    else {
+                        return searchFields.some(field => data[field].toString().includes(kw));
+                    }
                 });
     
                 // If all keywords are included, add the document to searchData

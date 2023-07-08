@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 dbData.push(data);
             });
 
-            // Sort the data by the 'No.' field in ascending order
+            // Sort the data by the 'No.' field in ascending order for search-results-table
             dbData.sort((a, b) => a["No."] - b["No."]);
 
             // Store to localStorage
@@ -208,11 +208,12 @@ document.addEventListener("DOMContentLoaded", function() {
             table.removeChild(table.firstChild);
         }
 
-        // Sort the data by the 'No.MT' field in ascending order
-        data.sort((a, b) => a["No.MT"] - b["No.MT"]);
+        // Convert quantities to array and sort by "No.MT" in ascending order
+        let quantitiesArray = Object.entries(quantities);
+        quantitiesArray.sort((a, b) => a[0]["No.MT"] - b[0]["No.MT"]);
 
         // Add table rows
-        for (let material in quantities) {
+        for (let [material, quantity] of quantitiesArray) {
             let tr = document.createElement("tr");
 
             let materialTd = document.createElement("td");
@@ -220,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tr.appendChild(materialTd);
 
             let quantityTd = document.createElement("td");
-            quantityTd.textContent = quantities[material];
+            quantityTd.textContent = quantity;
             tr.appendChild(quantityTd);
 
             table.appendChild(tr);
@@ -320,6 +321,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         });
+    
+        // Sort the data by the 'No.MT' field in ascending order
+        searchData.sort((a, b) => a["No."] - b["No."]);
     
         // Create a table with the search results
         createTable(searchData, 'DB', 'search-results-table');

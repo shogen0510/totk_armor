@@ -61,21 +61,27 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
         return db.collection("DB").get().then((querySnapshot) => {
             let dbData = [];
+            let mtNumbers = {}; // To store No.MT for each material
             querySnapshot.forEach((doc) => {
                 let data = doc.data();
                 data.id = doc.id;
                 dbData.push(data);
+                // Store the No.MT of each material
+                if (!(data["必要素材"] in mtNumbers)) {
+                    mtNumbers[data["必要素材"]] = data["No.MT"];
+                }
             });
-
+    
             // Sort the data by the 'No.' field in ascending order for search-results-table
             dbData.sort((a, b) => a["No."] - b["No."]);
-
+    
             // Store to localStorage
             localStorage.setItem("DB", JSON.stringify(dbData));
+            // Store No.MT values to localStorage
+            localStorage.setItem("MTNumbers", JSON.stringify(mtNumbers));
         });
     }
 
@@ -202,28 +208,32 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Unable to find an element with the id '" + tableId + "' in the DOM");
             return;
         }
-
+    
         // Clear out any existing rows
         while (table.firstChild) {
             table.removeChild(table.firstChild);
         }
-
-        // Convert quantities to array and sort by "No.MT" in ascending order
+    
+        // Convert quantities to array
         let quantitiesArray = Object.entries(quantities);
-        quantitiesArray.sort((a, b) => a[0]["No.MT"] - b[0]["No.MT"]);
-
+        // Get No.MT values from localStorage
+        let mtNumbers = JSON.parse(localStorage.getItem("MTNumbers"));
+    
+        // Sort by "No.MT" in ascending order
+        quantitiesArray.sort((a, b) => mtNumbers[a[0]] - mtNumbers[b[0]]);
+    
         // Add table rows
         for (let [material, quantity] of quantitiesArray) {
             let tr = document.createElement("tr");
-
+    
             let materialTd = document.createElement("td");
             materialTd.textContent = material;
             tr.appendChild(materialTd);
-
+    
             let quantityTd = document.createElement("td");
             quantityTd.textContent = quantity;
             tr.appendChild(quantityTd);
-
+    
             table.appendChild(tr);
         }
     }

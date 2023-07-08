@@ -208,6 +208,9 @@ document.addEventListener("DOMContentLoaded", function() {
             table.removeChild(table.firstChild);
         }
 
+        // Sort the data by the 'No.MT' field in ascending order
+        data.sort((a, b) => a["No.MT"] - b["No.MT"]);
+
         // Add table rows
         for (let material in quantities) {
             let tr = document.createElement("tr");

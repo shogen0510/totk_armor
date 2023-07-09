@@ -137,13 +137,21 @@ document.addEventListener("DOMContentLoaded", function() {
         if (checkboxContainer) {
             checkboxContainer.remove();
         }
-        checkboxContainer = document.createElement("div");
+        checkboxContainer = document.createElement("table");
         checkboxContainer.id = tableId + "-checkboxes";
         
         // dbDataからユニークなカテゴリを取得
         let categories = [...new Set(dbData.map(item => item["防具分類"]))];
-        
-        categories.forEach(category => {
+
+        let currentRow;
+        categories.forEach((category, index) => {
+            if (index % 4 === 0) {
+                currentRow = document.createElement("tr");
+                checkboxContainer.appendChild(currentRow);
+            }
+
+            let checkboxCell = document.createElement("td");
+
             let checkboxWrapper = document.createElement("div");
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
@@ -156,7 +164,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             checkboxWrapper.appendChild(checkbox);
             checkboxWrapper.appendChild(label);
-            checkboxContainer.appendChild(checkboxWrapper);
+            checkboxCell.appendChild(checkboxWrapper);
+            currentRow.appendChild(checkboxCell);
 
             // チェックボックスが変更された場合に実行
             checkbox.addEventListener('change', function() {
@@ -172,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         table.parentNode.insertBefore(checkboxContainer, table);
     }
+
 
     // Fetch links and store collections
     fetchLinks();

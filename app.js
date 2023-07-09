@@ -192,6 +192,8 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAndStoreDB();
 
     let dbData = [];
+    let searchData = []; // Add this line
+    let statusData = JSON.parse(localStorage.getItem('STATUS')); // Add this line
 
     // Get the quantity table element
     let quantityTable = document.getElementById('quantity-table');
@@ -323,6 +325,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function searchDB(categories,searchInput){
+        // Clear searchData
+        searchData = [];
+    
         // Define the fields to be included in the search
         let searchFields = ["防具分類", "必要素材"];
     

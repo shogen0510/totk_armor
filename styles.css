@@ -10,64 +10,56 @@ body {
     background-color: #ffffff;
 }
 
-#searchForm {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-#searchInput, #searchForm input[type="submit"] {
-    margin: 5px;
-    padding: 5px;
-    font-size: 18px;
-    border-radius: 5px;
-}
-
 #app {
     width: 100%;
     padding: 20px; /* add some padding to prevent content sticking to the edges */
     margin: auto;
     color: #333;
+    display: flex;
+    flex-direction: column;
 }
 
-input[type="text"], button {
-    padding: 10px;
-    font-size: 16px; /* increase font size for better visibility */
-    margin: 10px 0;
-    border-radius: 5px;
+#searchForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    order: 1;
 }
 
-input[type="text"] {
-    width: calc(100% - 20px); /* accounting for padding */
-    border: 1px solid #ccc;
+#checkboxContainer {
+    order: 2;
+    /* Add additional styling here if required */
 }
 
-button {
-    width: 100%;
-    border: none;
-    color: white;
-    background-color: #0070c9; 
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #005999; /* darken color on hover */
-}
-
-table {
+#quantity-table {
     width: 100%;
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
     background-color: #ececec; /* light gray */
     color: #2c2c2c; /* dark gray */
+    order: 3;
 }
 
-th, td {
-    padding: 8px;
-    text-align: left;
+#search-results-table {
+    order: 4;
+    /* Add additional styling here if required */
+}
+
+#status-table {
+    order: 5;
+    /* Add additional styling here if required */
+}
+
+#saveBtn {
+    order: 6;
+    /* Add additional styling here if required */
+}
+
+/* Add other existing styles here */
+
+button:hover {
+    background-color: #005999; /* darken color on hover */
 }
 
 table th {
@@ -75,17 +67,7 @@ table th {
     color: #ececec; /* light gray */
 }
 
-/* Extra small devices (phones) */
-@media only screen and (max-width: 600px) {
-    table {
-      font-size: 12px;
-    }
-
-    table th,
-    table td {
-      padding: 4px;
-    }
-}
+/* Add additional media queries here */
 
 a {
     text-decoration: none;

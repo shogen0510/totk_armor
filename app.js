@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchDB(selectedCategories);
             });
         });
-        table.parentNode.insertBefore(checkboxContainer, table);
+        document.getElementById('searchForm').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
     }
 
 

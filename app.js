@@ -187,14 +187,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // Fetch links and store collections
-    fetchLinks();
-    fetchAndStoreStatus();
-    fetchAndStoreDB();
+    Promise.all([
+        fetchLinks(),
+        fetchAndStoreStatus(),
+        fetchAndStoreDB()
+    ]).then(() => {
+        let dbData = JSON.parse(localStorage.getItem('DB'));
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+        let searchData = [];
 
-    let dbData = [];
-    let searchData = []; // Add this line
-    let statusData = JSON.parse(localStorage.getItem('STATUS')); // Add this line
-
+        if (localStorage.getItem("STATUS")) {
+            dbData = JSON.parse(localStorage.getItem("STATUS"));
+            if (document.getElementById('status-table')) {
+                createTable(dbData, 'STATUS', 'status-table');
+                createCheckboxes('status-table');
+                createDropdown('status-table', "防具分類");
+                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
+            } else {
+                console.error("Unable to find an element with the id 'status-table' in the DOM");
+            }
+        }
+    });
+    
     // Get the quantity table element
     let quantityTable = document.getElementById('quantity-table');
 
@@ -259,18 +273,7 @@ document.addEventListener("DOMContentLoaded", function() {
         fetchAndStoreStatus(),
         fetchAndStoreDB()
     ]).then(() => {
-        if (localStorage.getItem("STATUS")) {
-            dbData = JSON.parse(localStorage.getItem("STATUS"));
-            if (document.getElementById('status-table')) {
-                createTable(dbData, 'STATUS', 'status-table');
-                createCheckboxes('status-table');
-                createDropdown('status-table', "防具分類");
-                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
-            } else {
-                console.error("Unable to find an element with the id 'status-table' in the DOM");
-            }
-        }
-    })
+        })
 
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);

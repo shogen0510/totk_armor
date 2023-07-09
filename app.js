@@ -140,46 +140,24 @@ document.addEventListener("DOMContentLoaded", function() {
         checkboxContainer = document.createElement("table");
         checkboxContainer.id = tableId + "-checkboxes";
         
-        // dbDataからユニークなカテゴリを取得
+        // DBからユニークなカテゴリを取得
+        let dbData = JSON.parse(localStorage.getItem('DB'));
         let categories = [...new Set(dbData.map(item => item["防具分類"]))];
 
-        let currentRow;
-        categories.forEach((category, index) => {
-            if (index % 4 === 0) {
-                currentRow = document.createElement("tr");
-                checkboxContainer.appendChild(currentRow);
-            }
+        // ... (中部のコードは省略)
 
-            let checkboxCell = document.createElement("td");
-
-            let checkboxWrapper = document.createElement("div");
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.id = category;
-            checkbox.name = category;
-            
-            let label = document.createElement("label");
-            label.htmlFor = category;
-            label.appendChild(document.createTextNode(category));
-
-            checkboxWrapper.appendChild(checkbox);
-            checkboxWrapper.appendChild(label);
-            checkboxCell.appendChild(checkboxWrapper);
-            currentRow.appendChild(checkboxCell);
-
-            // チェックボックスが変更された場合に実行
-            checkbox.addEventListener('change', function() {
-                let selectedCategories = [];
-                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    if(checkbox.checked) {
-                        selectedCategories.push(checkbox.name);
-                    }
-                });
-                searchDB(selectedCategories);
+        // チェックボックスが変更された場合に実行
+        checkbox.addEventListener('change', function() {
+            let selectedCategories = [];
+            let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                if(checkbox.checked) {
+                    selectedCategories.push(checkbox.name);
+                }
             });
+            let searchInput = document.getElementById('searchInput').value;
+            searchDB(selectedCategories, searchInput);
         });
-        document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
     }
 
 
@@ -319,13 +297,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(categories) {
+    function searchDB(categories, material) {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
     
         // Define the fields to be included in the search
-        let searchFields = ["防具分類"];
+        let searchFields = ["防具分類", "必要素材"];
     
         dbData.forEach(data => {
             // Only look at items that have not been enhanced
@@ -354,6 +332,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Get the quantity table element
         let quantityTable = document.getElementById('quantity-table');
     
+        // If any category is included or the material matches, add the document to searchData
+        if (isAnyCategoryIncluded || data["必要素材"] === material) {
+            searchData.push(data);
+        }
+
         // If no category is selected, hide the quantity table
         if (categories.length === 0) {
             quantityTable.style.display = 'none';
@@ -365,9 +348,16 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        let categories = [e.target.value];
-        searchDB(categories);
+        let checkboxes = document.querySelectorAll('#status-table-checkboxes input[type="checkbox"]');
+        let selectedCategories = [];
+        checkboxes.forEach(checkbox => {
+            if(checkbox.checked) {
+                selectedCategories.push(checkbox.name);
+            }
+        });
+        searchDB(selectedCategories, e.target.value);
     });
+
 
     // Event Listener for Save button
     document.getElementById('saveBtn').addEventListener('click', function() {

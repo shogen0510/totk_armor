@@ -129,49 +129,61 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // チェックボックスの作成関数
-function createCheckboxes(tableId) {
-    let table = document.getElementById(tableId);
-    let checkboxContainer = document.getElementById(tableId + "-checkboxes");
+    function createCheckboxes(tableId) {
+        let table = document.getElementById(tableId);
+        let checkboxContainer = document.getElementById(tableId + "-checkboxes");
 
-    // チェックボックスのコンテナがすでに存在する場合は、それを削除
-    if (checkboxContainer) {
-        checkboxContainer.remove();
-    }
-    checkboxContainer = document.createElement("table");
-    checkboxContainer.id = tableId + "-checkboxes";
-    
-    // DBからユニークなカテゴリを取得
-    let dbData = JSON.parse(localStorage.getItem('DB'));
-    let categories = [...new Set(dbData.map(item => item["防具分類"]))];
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainer) {
+            checkboxContainer.remove();
+        }
+        checkboxContainer = document.createElement("table");
+        checkboxContainer.id = tableId + "-checkboxes";
+        
+        // dbDataからユニークなカテゴリを取得
+        let dbData = JSON.parse(localStorage.getItem('DB'));
+        let categories = [...new Set(dbData.map(item => item["防具分類"]))];
 
-    // 各カテゴリに対してチェックボックスを作成
-    categories.forEach(category => {
-        let checkboxRow = document.createElement("tr");
-        let checkboxCell = document.createElement("td");
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = category;
-        checkboxCell.appendChild(checkbox);
-        checkboxRow.appendChild(checkboxCell);
-        checkboxContainer.appendChild(checkboxRow);
 
-        // チェックボックスが変更された場合に実行
-        checkbox.addEventListener('change', function() {
-            let selectedCategories = [];
-            let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                if(checkbox.checked) {
-                    selectedCategories.push(checkbox.name);
-                }
+        let currentRow;
+        categories.forEach((category, index) => {
+            if (index % 4 === 0) {
+                currentRow = document.createElement("tr");
+                checkboxContainer.appendChild(currentRow);
+            }
+
+            let checkboxCell = document.createElement("td");
+
+            let checkboxWrapper = document.createElement("div");
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = category;
+            checkbox.name = category;
+            
+            let label = document.createElement("label");
+            label.htmlFor = category;
+            label.appendChild(document.createTextNode(category));
+
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            checkboxCell.appendChild(checkboxWrapper);
+            currentRow.appendChild(checkboxCell);
+
+            // チェックボックスが変更された場合に実行
+            checkbox.addEventListener('change', function() {
+                let selectedCategories = [];
+                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedCategories.push(checkbox.name);
+                    }
+                });
+                let searchInput = document.getElementById('searchInput').value;
+                searchDB(selectedCategories, searchInput);
             });
-            let searchInput = document.getElementById('searchInput').value;
-            searchDB(selectedCategories, searchInput);
         });
-    });
-
-    table.parentNode.insertBefore(checkboxContainer, table);
-}
-
+        document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
+    }
 
 
     // Fetch links and store collections
@@ -310,7 +322,7 @@ function createCheckboxes(tableId) {
         });
     }
 
-    function searchDB(categories, material) {
+    function searchDB(categories) {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
@@ -349,7 +361,7 @@ function createCheckboxes(tableId) {
         if (isAnyCategoryIncluded || data["必要素材"] === material) {
             searchData.push(data);
         }
-
+        
         // If no category is selected, hide the quantity table
         if (categories.length === 0) {
             quantityTable.style.display = 'none';
@@ -370,7 +382,7 @@ function createCheckboxes(tableId) {
         });
         searchDB(selectedCategories, e.target.value);
     });
-
+    
 
     // Event Listener for Save button
     document.getElementById('saveBtn').addEventListener('click', function() {
@@ -393,14 +405,14 @@ function createCheckboxes(tableId) {
     });
     
     // Event Listener for Clear button
-    //document.getElementById('clearBtn').addEventListener('click', function() {
-    //    let statusData = JSON.parse(localStorage.getItem('STATUS'));
-    //
-    //    statusData.forEach(row => {
-    //        row['強化済'] = 0;
-    //    });
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
 
-    //    localStorage.setItem('STATUS', JSON.stringify(statusData));
-    //    location.reload();
-    //});
+        statusData.forEach(row => {
+            row['強化済'] = 0;
+        });
+
+        localStorage.setItem('STATUS', JSON.stringify(statusData));
+        location.reload();
+    });
 });

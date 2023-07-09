@@ -338,8 +338,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // If any category is included, add the document to searchData
-                if (isAnyCategoryIncluded) {
+                // Check if the search input matches the '必要素材' field of the document
+                let isSearchInputIncluded = data["必要素材"].toLowerCase().includes(searchInput.toLowerCase());
+    
+                // If any category is included or the search input matches, add the document to searchData
+                if (isAnyCategoryIncluded || isSearchInputIncluded) {
                     searchData.push(data);
                 }
             }

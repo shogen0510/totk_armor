@@ -129,22 +129,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // チェックボックスの作成関数
-    function createCheckboxes(tableId) {
-        let table = document.getElementById(tableId);
-        let checkboxContainer = document.getElementById(tableId + "-checkboxes");
+function createCheckboxes(tableId) {
+    let table = document.getElementById(tableId);
+    let checkboxContainer = document.getElementById(tableId + "-checkboxes");
 
-        // チェックボックスのコンテナがすでに存在する場合は、それを削除
-        if (checkboxContainer) {
-            checkboxContainer.remove();
-        }
-        checkboxContainer = document.createElement("table");
-        checkboxContainer.id = tableId + "-checkboxes";
-        
-        // DBからユニークなカテゴリを取得
-        let dbData = JSON.parse(localStorage.getItem('DB'));
-        let categories = [...new Set(dbData.map(item => item["防具分類"]))];
+    // チェックボックスのコンテナがすでに存在する場合は、それを削除
+    if (checkboxContainer) {
+        checkboxContainer.remove();
+    }
+    checkboxContainer = document.createElement("table");
+    checkboxContainer.id = tableId + "-checkboxes";
+    
+    // DBからユニークなカテゴリを取得
+    let dbData = JSON.parse(localStorage.getItem('DB'));
+    let categories = [...new Set(dbData.map(item => item["防具分類"]))];
 
-        // ... (中部のコードは省略)
+    // 各カテゴリに対してチェックボックスを作成
+    categories.forEach(category => {
+        let checkboxRow = document.createElement("tr");
+        let checkboxCell = document.createElement("td");
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = category;
+        checkboxCell.appendChild(checkbox);
+        checkboxRow.appendChild(checkboxCell);
+        checkboxContainer.appendChild(checkboxRow);
 
         // チェックボックスが変更された場合に実行
         checkbox.addEventListener('change', function() {
@@ -158,7 +167,11 @@ document.addEventListener("DOMContentLoaded", function() {
             let searchInput = document.getElementById('searchInput').value;
             searchDB(selectedCategories, searchInput);
         });
-    }
+    });
+
+    table.parentNode.insertBefore(checkboxContainer, table);
+}
+
 
 
     // Fetch links and store collections
@@ -380,14 +393,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     // Event Listener for Clear button
-    document.getElementById('clearBtn').addEventListener('click', function() {
-        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+    //document.getElementById('clearBtn').addEventListener('click', function() {
+    //    let statusData = JSON.parse(localStorage.getItem('STATUS'));
+    //
+    //    statusData.forEach(row => {
+    //        row['強化済'] = 0;
+    //    });
 
-        statusData.forEach(row => {
-            row['強化済'] = 0;
-        });
-
-        localStorage.setItem('STATUS', JSON.stringify(statusData));
-        location.reload();
-    });
+    //    localStorage.setItem('STATUS', JSON.stringify(statusData));
+    //    location.reload();
+    //});
 });

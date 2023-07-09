@@ -365,7 +365,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        searchDB(e.target.value);
+        let categories = [e.target.value];
+        searchDB(categories);
     });
 
     // Event Listener for Save button

@@ -322,11 +322,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(categories) {
-        let dbData = JSON.parse(localStorage.getItem('DB'));
-        let statusData = JSON.parse(localStorage.getItem('STATUS'));
-        let searchData = [];
-    
+    function searchDB(categories,searchInput){
         // Define the fields to be included in the search
         let searchFields = ["防具分類", "必要素材"];
     
@@ -374,6 +370,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     
+    // チェックボックスが変更された場合に実行
+    checkbox.addEventListener('change', function() {
+        let selectedCategories = [];
+        let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if(checkbox.checked) {
+                selectedCategories.push(checkbox.name);
+            }
+        });
+        let searchInput = document.getElementById('searchInput').value;
+        searchDB(selectedCategories, searchInput);
+    });
+
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
         let checkboxes = document.querySelectorAll('#status-table-checkboxes input[type="checkbox"]');
@@ -385,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         searchDB(selectedCategories, e.target.value);
     });
-    
+        
 
     // Event Listener for Save button
     document.getElementById('saveBtn').addEventListener('click', function() {

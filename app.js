@@ -267,14 +267,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Get data from localStorage
-    Promise.all([
-        fetchLinks(),
-        fetchAndStoreStatus(),
-        fetchAndStoreDB()
-    ]).then(() => {
-        })
-
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);
         let headers;

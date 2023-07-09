@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchDB(selectedCategories);
             });
         });
-        document.getElementById('searchForm').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
+        document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
     }
 
 

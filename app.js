@@ -135,10 +135,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
         if (checkboxContainer) {
-            checkboxContainer.remove();
+            checkboxContainer.innerHTML = ''; // 既存の要素をクリア
+        } else {
+            checkboxContainer = document.createElement("div");
+            checkboxContainer.id = tableId + "-checkboxes";
+            document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
         }
-        checkboxContainer = document.createElement("table");
-        checkboxContainer.id = tableId + "-checkboxes";
         
         // dbDataからユニークなカテゴリを取得
         let categories = [...new Set(dbData.map(item => item["防具分類"]))];
@@ -180,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchDB(selectedCategories);
             });
         });
-        document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
     }
 
 

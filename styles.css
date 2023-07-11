@@ -107,7 +107,7 @@ table th {
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
-    background: #00f;
+    background: #444;
     color: #fff;
 }
 

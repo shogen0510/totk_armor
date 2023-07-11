@@ -82,24 +82,26 @@ table th {
 
 /* ラベルをチェックボックスのようにスタイルします */
 .styled-checkbox + label {
-    padding: 10px;
+    padding: 5px; /* ラベル内の余白を小さくする */
     display: inline-block;
     background: #f0f0f0;
     border: 1px solid #ddd;
     cursor: pointer;
     font-size: 10px;
-    width: 100px; /* 幅を指定 */
-    height: 30px; /* 高さを指定 */
-    line-height: 30px; /* テキストを中央に配置 */
+    width: 90px; /* 幅を少し小さくする */
+    height: 25px; /* 高さを少し小さくする */
+    line-height: 25px; /* テキストを中央に配置 */
     text-align: center; /* テキストを中央に配置 */
     white-space: nowrap; /* テキストを1行に収める */
     overflow: hidden; /* はみ出したテキストを非表示にする */
     text-overflow: ellipsis; /* はみ出したテキストを省略記号(...)で表示 */
+    margin-right: 5px; /* ラベル間の余白を追加 */
+    margin-bottom: 5px; /* ラベル間の余白を追加 */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
-    background: rgb(71, 71, 71);
+    background: #00f;
     color: #fff;
 }
 

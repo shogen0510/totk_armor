@@ -75,6 +75,27 @@ table th {
     color: #ececec; /* light gray */
 }
 
+/* チェックボックス自体を非表示にします */
+input[type='checkbox'] {
+    display: none;
+}
+
+/* ラベルをチェックボックスのようにスタイルします */
+input[type='checkbox'] + label {
+    padding: 10px;
+    display: inline-block;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+/* チェックボックスがチェックされたときのラベルのスタイル */
+input[type='checkbox']:checked + label {
+    background: #00f;
+    color: #fff;
+}
+
 /* Extra small devices (phones) */
 @media only screen and (max-width: 600px) {
     table {

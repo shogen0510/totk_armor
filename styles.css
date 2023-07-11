@@ -88,11 +88,18 @@ table th {
     border: 1px solid #ddd;
     cursor: pointer;
     font-size: 10px;
+    width: 100px; /* 幅を指定 */
+    height: 30px; /* 高さを指定 */
+    line-height: 30px; /* テキストを中央に配置 */
+    text-align: center; /* テキストを中央に配置 */
+    white-space: nowrap; /* テキストを1行に収める */
+    overflow: hidden; /* はみ出したテキストを非表示にする */
+    text-overflow: ellipsis; /* はみ出したテキストを省略記号(...)で表示 */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
-    background: #00f;
+    background: rgb(71, 71, 71);
     color: #fff;
 }
 

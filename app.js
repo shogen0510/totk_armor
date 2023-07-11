@@ -187,28 +187,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // Fetch links and store collections
-    Promise.all([
-        fetchLinks(),
-        fetchAndStoreStatus(),
-        fetchAndStoreDB()
-    ]).then(() => {
-        let dbData = JSON.parse(localStorage.getItem('DB'));
-        let statusData = JSON.parse(localStorage.getItem('STATUS'));
-        let searchData = [];
+    fetchLinks();
+    fetchAndStoreStatus();
+    fetchAndStoreDB();
 
-        if (localStorage.getItem("STATUS")) {
-            dbData = JSON.parse(localStorage.getItem("STATUS"));
-            if (document.getElementById('status-table')) {
-                createTable(dbData, 'STATUS', 'status-table');
-                createCheckboxes('status-table');
-                createDropdown('status-table', "防具分類");
-                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
-            } else {
-                console.error("Unable to find an element with the id 'status-table' in the DOM");
-            }
-        }
-    });
-    
+    let dbData = [];
+
     // Get the quantity table element
     let quantityTable = document.getElementById('quantity-table');
 
@@ -267,6 +251,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Get data from localStorage
+    Promise.all([
+        fetchLinks(),
+        fetchAndStoreStatus(),
+        fetchAndStoreDB()
+    ]).then(() => {
+        if (localStorage.getItem("STATUS")) {
+            dbData = JSON.parse(localStorage.getItem("STATUS"));
+            if (document.getElementById('status-table')) {
+                createTable(dbData, 'STATUS', 'status-table');
+                createCheckboxes('status-table');
+                createDropdown('status-table', "防具分類");
+                document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
+            } else {
+                console.error("Unable to find an element with the id 'status-table' in the DOM");
+            }
+        }
+    })
+
     function createTable(data, type, tableId) {
         let table = document.getElementById(tableId);
         let headers;
@@ -319,9 +322,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(categories,searchInput){
-        // Clear searchData
-        searchData = [];
+    function searchDB(categories) {
+        let dbData = JSON.parse(localStorage.getItem('DB'));
+        let statusData = JSON.parse(localStorage.getItem('STATUS'));
+        let searchData = [];
     
         // Define the fields to be included in the search
         let searchFields = ["防具分類", "必要素材"];
@@ -334,11 +338,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // Check if the search input matches the '必要素材' field of the document
-                let isSearchInputIncluded = data["必要素材"].toLowerCase().includes(searchInput.toLowerCase());
-    
-                // If any category is included or the search input matches, add the document to searchData
-                if (isAnyCategoryIncluded || isSearchInputIncluded) {
+                // If any category is included, add the document to searchData
+                if (isAnyCategoryIncluded) {
                     searchData.push(data);
                 }
             }
@@ -370,19 +371,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     
-    // チェックボックスが変更された場合に実行
-    checkbox.addEventListener('change', function() {
-        let selectedCategories = [];
-        let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            if(checkbox.checked) {
-                selectedCategories.push(checkbox.name);
-            }
-        });
-        let searchInput = document.getElementById('searchInput').value;
-        searchDB(selectedCategories, searchInput);
-    });
-
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
         let checkboxes = document.querySelectorAll('#status-table-checkboxes input[type="checkbox"]');
@@ -394,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         searchDB(selectedCategories, e.target.value);
     });
-        
+    
 
     // Event Listener for Save button
     document.getElementById('saveBtn').addEventListener('click', function() {

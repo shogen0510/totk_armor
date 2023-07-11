@@ -81,18 +81,16 @@ table th {
 }
 
 /* チェックボックスのコンテナをフレックスボックスにします */
-.styled-checkbox {
+#status-table-checkboxes {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* アイテムを左側から配置します */
+    justify-content: flex-start;
     padding: 7px 2px 2px 7px;
-    width: 100%; /* コンテナの幅を設定します */
-    overflow: auto; /* コンテナが画面からはみ出す場合にスクロールバーを表示します */
 }
 
 /* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    width: 100%; /* ラベルの幅をコンテナの幅に合わせます */
+    width: 100%;
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
@@ -105,14 +103,11 @@ table th {
     opacity: 1;
     margin-right: 5px; /* ラベル間の余白を追加 */
     margin-bottom: 5px; /* ラベル間の余白を追加 */
-    overflow: hidden; /* テキストがラベルからはみ出す場合に非表示にします */
-    text-overflow: ellipsis; /* テキストがラベルからはみ出す場合に省略記号(...)を表示します */
-    white-space: nowrap; /* テキストを1行に抑えます */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
-    background: #444;
+    background: #00f;
     color: #fff;
 }
 
@@ -161,3 +156,4 @@ a {
         max-width: 1200px;
     }
 }
+

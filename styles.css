@@ -80,21 +80,27 @@ table th {
     display: none;
 }
 
-/* ラベルをチェックボックスのようにスタイルします */
+/* チェックボックスのコンテナをフレックスボックスにします */
+#status-table-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 7px 2px 2px 7px;
+}
+
+/* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    padding: 5px; /* ラベル内の余白を小さくする */
-    display: inline-block;
-    background: #f0f0f0;
-    border: 1px solid #ddd;
-    cursor: pointer;
+    width: 100%;
+    color: #a0a0a0;
+    background-color: #fff;
+    text-align: center;
     font-size: 10px;
-    width: 90px; /* 幅を少し小さくする */
-    height: 25px; /* 高さを少し小さくする */
-    line-height: 25px; /* テキストを中央に配置 */
-    text-align: center; /* テキストを中央に配置 */
-    white-space: nowrap; /* テキストを1行に収める */
-    overflow: hidden; /* はみ出したテキストを非表示にする */
-    text-overflow: ellipsis; /* はみ出したテキストを省略記号(...)で表示 */
+    line-height: 13px;
+    font-weight: 700;
+    border: solid 1px #e2e2e2;
+    padding: 5px 0;
+    border-radius: 3px;
+    opacity: 1;
     margin-right: 5px; /* ラベル間の余白を追加 */
     margin-bottom: 5px; /* ラベル間の余白を追加 */
 }

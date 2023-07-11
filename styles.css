@@ -76,12 +76,12 @@ table th {
 }
 
 /* チェックボックス自体を非表示にします */
-input[type='checkbox'] {
+.styled-checkbox {
     display: none;
 }
 
 /* ラベルをチェックボックスのようにスタイルします */
-input[type='checkbox'] + label {
+.styled-checkbox + label {
     padding: 10px;
     display: inline-block;
     background: #f0f0f0;
@@ -91,7 +91,7 @@ input[type='checkbox'] + label {
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
-input[type='checkbox']:checked + label {
+.styled-checkbox:checked + label {
     background: #00f;
     color: #fff;
 }

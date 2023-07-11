@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
             checkbox.type = "checkbox";
             checkbox.id = category;
             checkbox.name = category;
+            checkbox.className = "styled-checkbox";  // 追加
             
             let label = document.createElement("label");
             label.htmlFor = category;

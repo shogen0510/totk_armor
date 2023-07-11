@@ -84,13 +84,13 @@ table th {
 #status-table-checkboxes {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between; /* これにより、要素間のスペースが均等に分配されます */
     padding: 7px 2px 2px 7px;
 }
 
 /* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    width: 100%;
+    width: 23%; /* 4つの要素が1行に収まるように、幅を少し小さくします */
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
@@ -101,9 +101,9 @@ table th {
     padding: 5px 0;
     border-radius: 3px;
     opacity: 1;
-    margin-right: 5px; /* ラベル間の余白を追加 */
     margin-bottom: 5px; /* ラベル間の余白を追加 */
 }
+
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {

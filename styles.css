@@ -84,17 +84,19 @@ table th {
 #status-table-checkboxes {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-start; /* アイテムを左側から配置します */
     padding: 7px 2px 2px 7px;
+    width: 100%; /* コンテナの幅を設定します */
+    overflow: auto; /* コンテナが画面からはみ出す場合にスクロールバーを表示します */
 }
 
 /* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    flex-basis: 120px; /* 基本的な幅を設定します */
+    width: 100%; /* ラベルの幅をコンテナの幅に合わせます */
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 13px;
     font-weight: 700;
     border: solid 1px #e2e2e2;
@@ -103,6 +105,9 @@ table th {
     opacity: 1;
     margin-right: 5px; /* ラベル間の余白を追加 */
     margin-bottom: 5px; /* ラベル間の余白を追加 */
+    overflow: hidden; /* テキストがラベルからはみ出す場合に非表示にします */
+    text-overflow: ellipsis; /* テキストがラベルからはみ出す場合に省略記号(...)を表示します */
+    white-space: nowrap; /* テキストを1行に抑えます */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */

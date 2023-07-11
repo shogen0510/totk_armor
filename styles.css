@@ -103,6 +103,8 @@ table th {
     border-radius: 3px;
     opacity: 1;
     box-sizing: border-box; /* パディングとボーダーが幅と高さに含まれるようにします */
+    min-height: 30px; /* ラベルの最小高さを設定します */
+    white-space: nowrap; /* テキストを一行に強制します */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */

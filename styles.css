@@ -81,7 +81,7 @@ table th {
 }
 
 /* チェックボックスのコンテナをフレックスボックスにします */
-#status-table-checkboxes {
+.styled-checkbox {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* アイテムを左側から配置します */

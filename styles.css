@@ -80,18 +80,14 @@ table th {
     display: none;
 }
 
-/* チェックボックスのコンテナをフレックスボックスにします */
 #status-table-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start; /* フレックスアイテムを上端に揃えます */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 4px; /* ラベル間の余白を追加 */
 }
 
 /* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    flex: 1 0 auto; /* フレックスボックス内でラベルが均等に分布するようにします */
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
@@ -103,8 +99,6 @@ table th {
     border-radius: 3px;
     opacity: 1;
     box-sizing: border-box; /* パディングとボーダーが幅と高さに含まれるようにします */
-    min-height: 30px; /* ラベルの最小高さを設定します */
-    white-space: nowrap; /* テキストを一行に強制します */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */

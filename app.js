@@ -128,6 +128,56 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
 
+    // Lvに基づいたチェックボックスの作成関数
+    function createLvCheckboxes(tableId) {
+        let checkboxContainer = document.getElementById(tableId + "-lv-checkboxes");
+
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainer) {
+            checkboxContainer.innerHTML = ''; // 既存の要素をクリア
+        }
+
+        // dbDataからユニークなLvを取得
+        let levels = [...new Set(dbData.map(item => item["Lv"]))];
+
+        levels.forEach((level, index) => {
+            let checkboxWrapper = document.createElement("div");
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = "lv-" + level;
+            checkbox.name = level;
+            checkbox.className = "styled-checkbox";  // 追加
+            
+            let label = document.createElement("label");
+            label.htmlFor = "lv-" + level;
+            label.appendChild(document.createTextNode("Lv" + level));
+
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            checkboxContainer.appendChild(checkboxWrapper); // checkboxWrapperを直接checkboxContainerに追加
+
+            // チェックボックスが変更された場合に実行
+            checkbox.addEventListener('change', function() {
+                let selectedCategories = [];
+                let selectedLevels = [];
+                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedCategories.push(checkbox.name);
+                    }
+                });
+                checkboxes = document.querySelectorAll('#' + tableId + '-lv-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedLevels.push(checkbox.name);
+                    }
+                });
+                searchDB(selectedCategories, selectedLevels);
+            });
+        });
+    }
+    
+    
     // チェックボックスの作成関数
     function createCheckboxes(tableId) {
         let checkboxContainer = document.getElementById(tableId + "-checkboxes");
@@ -319,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(categories) {
+    function searchDB(categories, levels) {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
@@ -335,8 +385,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // If any category is included, add the document to searchData
-                if (isAnyCategoryIncluded) {
+                // Check if the level is included in the selected levels
+                let isLevelIncluded = levels.includes(data["Lv"].toString());
+    
+                // If any category is included and the level is included, add the document to searchData
+                if (isAnyCategoryIncluded && isLevelIncluded) {
                     searchData.push(data);
                 }
             }
@@ -355,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let quantityTable = document.getElementById('quantity-table');
     
         // If no category is selected, hide the quantity table
-        if (categories.length === 0) {
+        if (categories.length === 0 && levels.length === 0) {
             quantityTable.style.display = 'none';
         } else {
             quantityTable.style.display = 'table';

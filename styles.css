@@ -81,6 +81,14 @@ table th {
 }
 
 /* チェックボックスのコンテナをフレックスボックスにします */
+#status-table-lv-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 7px 2px 2px 7px;
+}
+
+/* チェックボックスのコンテナをフレックスボックスにします */
 #status-table-checkboxes {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

@@ -140,8 +140,21 @@ document.addEventListener("DOMContentLoaded", function() {
         // dbDataからユニークなカテゴリを取得
         let categories = [...new Set(dbData.map(item => item["防具分類"]))];
 
+        // 最大のラベルの幅を計算
+        let maxLabelWidth = 0;
+        categories.forEach((category) => {
+            let tempLabel = document.createElement("label");
+            tempLabel.style.display = "inline-block";
+            tempLabel.textContent = category;
+            document.body.appendChild(tempLabel);
+            maxLabelWidth = Math.max(maxLabelWidth, tempLabel.offsetWidth);
+            document.body.removeChild(tempLabel);
+        });
+
         categories.forEach((category, index) => {
             let checkboxWrapper = document.createElement("div");
+            checkboxWrapper.style.width = maxLabelWidth + "px";  // ラベルの幅を設定
+
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.id = category;
@@ -169,6 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
 
 
     // Fetch links and store collections

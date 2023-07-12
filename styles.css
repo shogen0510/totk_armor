@@ -88,23 +88,26 @@ table th {
     padding: 7px 2px 2px 7px;
 }
 
+/* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    width: 100%;
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
-    font-size: 10px;
+    font-size: 11px;
     line-height: 13px;
     font-weight: 700;
     border: solid 1px #e2e2e2;
     padding: 5px 0;
     border-radius: 3px;
     opacity: 1;
+    margin-right: 5px; /* ラベル間の余白を追加 */
+    margin-bottom: 5px; /* ラベル間の余白を追加 */
+    white-space: nowrap; /* テキストを一行に収める */
 }
 
 /* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
-    background: #00f;
+    background: #444;
     color: #fff;
 }
 

@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Lvに基づいたチェックボックスの作成関数
     function createLvCheckboxes(tableId) {
+        let selectedLevels = [];
         let checkboxContainer = document.getElementById(tableId + "-lv-checkboxes");
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
@@ -173,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // チェックボックスの作成関数
     function createCheckboxes(tableId) {
+        let selectedCategories = [];
         let checkboxContainer = document.getElementById(tableId + "-checkboxes");
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
@@ -363,6 +365,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function searchDB(categories, levels) {
+        let selectedCategories = [];
+        let selectedLevels = [];
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];

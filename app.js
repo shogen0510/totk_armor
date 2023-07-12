@@ -128,9 +128,11 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
 
+    let selectedLevels = [];
+    let selectedCategories = [];
+
     // Lvに基づいたチェックボックスの作成関数
     function createLvCheckboxes(tableId) {
-        let selectedLevels = [];
         let checkboxContainer = document.getElementById(tableId + "-lv-checkboxes");
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
@@ -159,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // チェックボックスが変更された場合に実行
             checkbox.addEventListener('change', function() {
-                let selectedLevels = [];
+                selectedLevels = [];
                 let checkboxes = document.querySelectorAll('#' + tableId + '-lv-checkboxes input[type="checkbox"]');
                 checkboxes.forEach(checkbox => {
                     if(checkbox.checked) {
@@ -174,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // チェックボックスの作成関数
     function createCheckboxes(tableId) {
-        let selectedCategories = [];
         let checkboxContainer = document.getElementById(tableId + "-checkboxes");
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
@@ -214,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // チェックボックスが変更された場合に実行
             checkbox.addEventListener('change', function() {
-                let selectedCategories = [];
+                selectedCategories = [];
                 let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
                 checkboxes.forEach(checkbox => {
                     if(checkbox.checked) {
@@ -364,9 +365,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(categories, levels) {
-        let selectedCategories = [];
-        let selectedLevels = [];
+    function searchDB() {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
@@ -380,17 +379,17 @@ document.addEventListener("DOMContentLoaded", function() {
             if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
                 
                 // Check if each category is included in the searchFields of the document
-                let isAnyCategoryIncluded = categories.some(cat => {
+                let isAnyCategoryIncluded = selectedCategories.some(cat => {
                     return searchFields.some(field => data[field].toString() === cat);
                 });
     
                 // Check if the level is included in the searchFields of the document
-                let isAnyLevelIncluded = levels.some(cat => {
+                let isAnyLevelIncluded = selectedLevels.some(cat => {
                     return searchLvFields.some(field => data[field].toString() === cat);
                 });
-
+    
                 // If any category is included or the level is included, add the document to searchData
-                if ((categories.length === 0 || isAnyCategoryIncluded) && (levels.length === 0 || isAnyLevelIncluded)) {
+                if ((selectedCategories.length === 0 || isAnyCategoryIncluded) && (selectedLevels.length === 0 || isAnyLevelIncluded)) {
                     searchData.push(data);
                 }
             }
@@ -409,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let quantityTable = document.getElementById('quantity-table');
     
         // If no category is selected, hide the quantity table
-        if (categories.length === 0 && levels.length === 0) {
+        if (selectedCategories.length === 0 && selectedLevels.length === 0) {
             quantityTable.style.display = 'none';
         } else {
             quantityTable.style.display = 'table';

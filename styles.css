@@ -19,8 +19,8 @@ body {
 #searchInput, #searchForm input[type="submit"] {
     margin: 5px;
     padding: 5px;
-    font-size: 18px;
-    border-radius: 5px;
+    font-size: 10px;
+    border-radius: 4px;
 }
 
 #app {

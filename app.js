@@ -302,6 +302,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
+                createCheckboxesLV('status-table');
                 createCheckboxes('status-table');
                 createDropdown('status-table', "防具分類");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);

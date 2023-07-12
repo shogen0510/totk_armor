@@ -411,8 +411,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // Get the quantity table element
         let quantityTable = document.getElementById('quantity-table');
     
-        // If no category is selected, hide the quantity table
-        if (selectedCategories.length === 0 && selectedLevels.length === 0) {
+        // If no category is selected and no keyword is entered, hide the quantity table
+        if (selectedCategories.length === 0 && selectedLevels.length === 0 && searchKeyword === "" ) {
             quantityTable.style.display = 'none';
         } else {
             quantityTable.style.display = 'table';

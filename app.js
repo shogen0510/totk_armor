@@ -128,6 +128,50 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
 
+    // 強化Lvチェックボックスの作成関数
+    function createCheckboxesLV(tableId) {
+        let checkboxContainerLV = document.getElementById(tableId + "-checkboxesLV");
+
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainerLV) {
+            checkboxContainerLV.innerHTML = ''; // 既存の要素をクリア
+        }
+
+        // dbDataからユニークなカテゴリを取得
+        let categories = [...new Set(dbData.map(item => item["Lv"]))];
+
+        categories.forEach((category, index) => {
+            let checkboxWrapperLV = document.createElement("div");
+            let checkboxLV = document.createElement("input");
+            checkboxLV.type = "checkbox";
+            checkboxLV.id = categoryLV;
+            checkboxLV.name = categoryLV;
+            checkboxLV.className = "styled-checkbox"; 
+            
+            let labelLV = document.createElement("label");
+            labelLV.htmlFor = categoryLV;
+            labelLV.appendChild(document.createTextNode(categoryLV));
+
+            checkboxWrapperLV.appendChild(checkboxLV);
+            checkboxWrapperLV.appendChild(labelLV);
+            checkboxContainerLV.appendChild(checkboxWrapperLV); // checkboxWrapperを直接checkboxContainerに追加
+
+            // チェックボックスが変更された場合に実行
+            checkboxLV.addEventListener('change', function() {
+                let selectedCategories = [];
+                let checkboxesLV = document.querySelectorAll('#' + tableId + '-checkboxesLV input[type="checkbox"]');
+                checkboxesLV.forEach(checkboxLV => {
+                    if(checkboxLV.checked) {
+                        selectedCategories.push(checkbox.name);
+                    }
+                });
+                searchDB(selectedCategories);
+            });
+        });
+    }
+
+
+
     // チェックボックスの作成関数
     function createCheckboxes(tableId) {
         let checkboxContainer = document.getElementById(tableId + "-checkboxes");

@@ -84,7 +84,7 @@ table th {
 #status-table-checkboxes {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 4px;
     padding: 7px 2px 2px 7px;
 }
 

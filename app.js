@@ -309,6 +309,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
                 createCheckboxes('status-table');
+                createLvCheckboxes('status-table'); // Lvに基づいたチェックボックスを作成
                 createDropdown('status-table', "防具分類");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {

@@ -387,7 +387,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
     
                 // Check if the level is included in the selected levels
-                let isLevelIncluded = levels.includes(data["Lv"].toString());
+                let isLevelIncluded = data["Lv"] ? levels.includes(data["Lv"].toString()) : false;
     
                 // If any category is included and the level is included, add the document to searchData
                 if (isAnyCategoryIncluded && isLevelIncluded) {

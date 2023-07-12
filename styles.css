@@ -90,12 +90,11 @@ table th {
 
 /* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    width: 100%;
-    min-width: 100px; /* ここで最小幅を設定します。この値は例です。 */
+    width: 100px; /* ここで固定幅を設定します。この値は例です。 */
     color: #a0a0a0;
     background-color: #fff;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 13px;
     font-weight: 700;
     border: solid 1px #e2e2e2;

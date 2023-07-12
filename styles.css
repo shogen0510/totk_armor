@@ -32,7 +32,7 @@ body {
 
 input[type="text"], button {
     padding: 10px;
-    font-size: 16px; /* increase font size for better visibility */
+    font-size: 10px; /* increase font size for better visibility */
     margin: 10px 0;
     border-radius: 5px;
 }

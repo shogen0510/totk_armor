@@ -1,5 +1,6 @@
 let selectedLevels = [];
 let selectedCategories = [];
+let searchKeyword = "";
 
 document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
@@ -371,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let searchData = [];
     
         // Define the fields to be included in the search
-        let searchFields = ["防具分類"];
+        let searchFields = ["防具分類", "必要素材"];
         let searchLvFields = ["Lv"];
     
         dbData.forEach(data => {
@@ -388,8 +389,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     return searchLvFields.some(field => data[field].toString() === cat);
                 });
     
+                // Check if the keyword is included in the searchFields of the document
+                let isKeywordIncluded = searchFields.some(field => data[field].toString().includes(searchKeyword));
+    
                 // If any category is included or the level is included, add the document to searchData
-                if ((selectedCategories.length === 0 || isAnyCategoryIncluded) && (selectedLevels.length === 0 || isAnyLevelIncluded)) {
+                if ((selectedCategories.length === 0 || isAnyCategoryIncluded) && (selectedLevels.length === 0 || isAnyLevelIncluded) && (searchKeyword === "" || isKeywordIncluded)) {
                     searchData.push(data);
                 }
             }
@@ -418,7 +422,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        searchDB(e.target.value);
+        searchKeyword = e.target.value;
+        searchDB();
     });
 
     // Event Listener for Save button

@@ -158,21 +158,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // チェックボックスが変更された場合に実行
             checkbox.addEventListener('change', function() {
-                let selectedCategories = [];
                 let selectedLevels = [];
-                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    if(checkbox.checked) {
-                        selectedCategories.push(checkbox.name);
-                    }
-                });
-                checkboxes = document.querySelectorAll('#' + tableId + '-lv-checkboxes input[type="checkbox"]');
+                let checkboxes = document.querySelectorAll('#' + tableId + '-lv-checkboxes input[type="checkbox"]');
                 checkboxes.forEach(checkbox => {
                     if(checkbox.checked) {
                         selectedLevels.push(checkbox.name);
                     }
                 });
-                searchDB(selectedCategories, selectedLevels);
+                searchDB(selectedLevels);
             });
         });
     }
@@ -200,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 maxLabelWidth = Math.max(maxLabelWidth, tempLabel.offsetWidth);
                 document.body.removeChild(tempLabel);
             });
-
 
         categories.forEach((category, index) => {
             let checkboxWrapper = document.createElement("div");
@@ -387,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
     
                 // Check if the level is included in the selected levels
-                let isLevelIncluded = data["Lv"] ? levels.includes(data["Lv"].toString()) : false;
+                let isLevelIncluded = levels.includes(data["Lv"].toString());
     
                 // If any category is included and the level is included, add the document to searchData
                 if (isAnyCategoryIncluded && isLevelIncluded) {

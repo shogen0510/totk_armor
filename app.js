@@ -1,3 +1,6 @@
+let selectedLevels = [];
+let selectedCategories = [];
+
 document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
         apiKey: "AIzaSyAuLNkpFgnd9YAWfcRY_kklrDOt19HK_UM",
@@ -127,9 +130,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').value = selectedCategory;
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
-
-    let selectedLevels = [];
-    let selectedCategories = [];
 
     // Lvに基づいたチェックボックスの作成関数
     function createLvCheckboxes(tableId) {

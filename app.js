@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         selectedLevels.push(checkbox.name);
                     }
                 });
-                searchDB(selectedLevels);
+                searchDB(selectedCategories, selectedLevels);
             });
         });
     }
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         selectedCategories.push(checkbox.name);
                     }
                 });
-                searchDB(selectedCategories);
+                searchDB(selectedCategories, selectedLevels);
             });
         });
     }

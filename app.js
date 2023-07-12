@@ -130,30 +130,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // チェックボックスの作成関数
     function createCheckboxes(tableId) {
-        let table = document.getElementById(tableId);
         let checkboxContainer = document.getElementById(tableId + "-checkboxes");
 
         // チェックボックスのコンテナがすでに存在する場合は、それを削除
         if (checkboxContainer) {
             checkboxContainer.innerHTML = ''; // 既存の要素をクリア
-        } else {
-            checkboxContainer = document.createElement("div");
-            checkboxContainer.id = tableId + "-checkboxes";
-            document.getElementById('app').insertBefore(checkboxContainer, document.getElementById('quantity-table'));
         }
-        
+
         // dbDataからユニークなカテゴリを取得
         let categories = [...new Set(dbData.map(item => item["防具分類"]))];
 
-        let currentRow;
         categories.forEach((category, index) => {
-            if (index % 4 === 0) {
-                currentRow = document.createElement("tr");
-                checkboxContainer.appendChild(currentRow);
-            }
-
-            let checkboxCell = document.createElement("td");
-
             let checkboxWrapper = document.createElement("div");
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
@@ -167,8 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             checkboxWrapper.appendChild(checkbox);
             checkboxWrapper.appendChild(label);
-            checkboxCell.appendChild(checkboxWrapper);
-            currentRow.appendChild(checkboxCell);
+            checkboxContainer.appendChild(checkboxWrapper); // checkboxWrapperを直接checkboxContainerに追加
 
             // チェックボックスが変更された場合に実行
             checkbox.addEventListener('change', function() {

@@ -369,20 +369,24 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Define the fields to be included in the search
         let searchFields = ["防具分類"];
+        let searchLvFields = ["Lv"];
     
         dbData.forEach(data => {
             // Only look at items that have not been enhanced
             if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
+                
                 // Check if each category is included in the searchFields of the document
                 let isAnyCategoryIncluded = categories.some(cat => {
                     return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // Check if the level is included in the selected levels
-                let isLevelIncluded = levels.includes(data["Lv"].toString());
-    
-                // If any category is included and the level is included, add the document to searchData
-                if (isAnyCategoryIncluded && isLevelIncluded) {
+                // Check if the level is included in the searchFields of the document
+                let isAnyLevelIncluded = levels.some(cat => {
+                    return searchLvFields.some(field => data[field].toString() === cat);
+                });
+
+                // If any category is included or the level is included, add the document to searchData
+                if ((categories.length === 0 || isAnyCategoryIncluded) && (levels.length === 0 || isAnyLevelIncluded)) {
                     searchData.push(data);
                 }
             }

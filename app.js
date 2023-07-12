@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             let label = document.createElement("label");
             label.htmlFor = "lv-" + level;
-            label.appendChild(document.createTextNode("Lv" + level));
+            label.appendChild(document.createTextNode(level));
 
             checkboxWrapper.appendChild(checkbox);
             checkboxWrapper.appendChild(label);

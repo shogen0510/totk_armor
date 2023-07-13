@@ -19,8 +19,8 @@ body {
 #searchInput, #searchForm input[type="submit"] {
     margin: 5px;
     padding: 5px;
-    font-size: 18px;
-    border-radius: 5px;
+    font-size: 10px;
+    border-radius: 4px;
 }
 
 #app {
@@ -32,7 +32,7 @@ body {
 
 input[type="text"], button {
     padding: 10px;
-    font-size: 16px; /* increase font size for better visibility */
+    font-size: 10px; /* increase font size for better visibility */
     margin: 10px 0;
     border-radius: 5px;
 }
@@ -73,6 +73,47 @@ th, td {
 table th {
     background-color: #2c2c2c; /* dark gray */
     color: #ececec; /* light gray */
+}
+
+/* チェックボックス自体を非表示にします */
+.styled-checkbox {
+    display: none;
+}
+
+/* チェックボックスのコンテナをフレックスボックスにします */
+#status-table-lv-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 7px 2px 2px 7px;
+}
+
+/* チェックボックスのコンテナをフレックスボックスにします */
+#status-table-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 7px 2px 2px 7px;
+}
+
+/* ラベルをボタンのようにスタイルします */
+.styled-checkbox + label {
+    width: 100%; 
+    color: #a0a0a0;
+    background-color: #fff;
+    text-align: center;
+    font-size: 10px;
+    line-height: 13px;
+    font-weight: 700;
+    opacity: 1;
+    margin-right: 2px; /* ラベル間の余白を狭く */
+    margin-bottom: 2px; /* ラベル間の余白を狭く */
+}
+
+/* チェックボックスがチェックされたときのラベルのスタイル */
+.styled-checkbox:checked + label {
+    background: #444;
+    color: #fff;
 }
 
 /* Extra small devices (phones) */
@@ -120,3 +161,4 @@ a {
         max-width: 1200px;
     }
 }
+

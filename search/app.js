@@ -1,3 +1,7 @@
+let selectedLevels = [];
+let selectedCategories = [];
+let searchKeyword = "";
+
 document.addEventListener("DOMContentLoaded", function() {
     var firebaseConfig = {
         apiKey: "AIzaSyAuLNkpFgnd9YAWfcRY_kklrDOt19HK_UM",
@@ -61,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Fetch and store "DB" collection to localStorage on load
     function fetchAndStoreDB() {
         return db.collection("DB").get().then((querySnapshot) => {
             let dbData = [];
@@ -128,6 +131,103 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('status-table-dropdown').value = selectedCategory;
         document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
     }
+
+    // Lvに基づいたチェックボックスの作成関数
+    function createLvCheckboxes(tableId) {
+        let checkboxContainer = document.getElementById(tableId + "-lv-checkboxes");
+
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainer) {
+            checkboxContainer.innerHTML = ''; // 既存の要素をクリア
+        }
+
+        // dbDataからユニークなLvを取得
+        let levels = [...new Set(dbData.map(item => item["Lv"]))];
+
+        levels.forEach((level, index) => {
+            let checkboxWrapper = document.createElement("div");
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = "lv-" + level;
+            checkbox.name = level;
+            checkbox.className = "styled-checkbox";  // 追加
+            
+            let label = document.createElement("label");
+            label.htmlFor = "lv-" + level;
+            label.appendChild(document.createTextNode(level));
+
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            checkboxContainer.appendChild(checkboxWrapper); // checkboxWrapperを直接checkboxContainerに追加
+
+            // チェックボックスが変更された場合に実行
+            checkbox.addEventListener('change', function() {
+                selectedLevels = [];
+                let checkboxes = document.querySelectorAll('#' + tableId + '-lv-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedLevels.push(checkbox.name);
+                    }
+                });
+                searchDB(selectedCategories, selectedLevels);
+            });
+        });
+    }
+    
+    
+    // チェックボックスの作成関数
+    function createCheckboxes(tableId) {
+        let checkboxContainer = document.getElementById(tableId + "-checkboxes");
+
+        // チェックボックスのコンテナがすでに存在する場合は、それを削除
+        if (checkboxContainer) {
+            checkboxContainer.innerHTML = ''; // 既存の要素をクリア
+        }
+
+        // dbDataからユニークなカテゴリを取得
+        let categories = [...new Set(dbData.map(item => item["防具分類"]))];
+
+        // 最大のラベルの幅を計算
+            let maxLabelWidth = 0;
+            categories.forEach((category) => {
+                let tempLabel = document.createElement("label");
+                tempLabel.style.display = "inline-block";
+                tempLabel.textContent = category;
+                document.body.appendChild(tempLabel);
+                maxLabelWidth = Math.max(maxLabelWidth, tempLabel.offsetWidth);
+                document.body.removeChild(tempLabel);
+            });
+
+        categories.forEach((category, index) => {
+            let checkboxWrapper = document.createElement("div");
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = category;
+            checkbox.name = category;
+            checkbox.className = "styled-checkbox";  // 追加
+            
+            let label = document.createElement("label");
+            label.htmlFor = category;
+            label.appendChild(document.createTextNode(category));
+
+            checkboxWrapper.appendChild(checkbox);
+            checkboxWrapper.appendChild(label);
+            checkboxContainer.appendChild(checkboxWrapper); // checkboxWrapperを直接checkboxContainerに追加
+
+            // チェックボックスが変更された場合に実行
+            checkbox.addEventListener('change', function() {
+                selectedCategories = [];
+                let checkboxes = document.querySelectorAll('#' + tableId + '-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if(checkbox.checked) {
+                        selectedCategories.push(checkbox.name);
+                    }
+                });
+                searchDB(selectedCategories, selectedLevels);
+            });
+        });
+    }
+
 
     // Fetch links and store collections
     fetchLinks();
@@ -204,6 +304,8 @@ document.addEventListener("DOMContentLoaded", function() {
             dbData = JSON.parse(localStorage.getItem("STATUS"));
             if (document.getElementById('status-table')) {
                 createTable(dbData, 'STATUS', 'status-table');
+                createCheckboxes('status-table');
+                createLvCheckboxes('status-table'); // Lvに基づいたチェックボックスを作成
                 createDropdown('status-table', "防具分類");
                 document.getElementById('status-table-dropdown').addEventListener('change', filterTable);
             } else {
@@ -264,31 +366,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function searchDB(keyword) {
+    function searchDB() {
         let dbData = JSON.parse(localStorage.getItem('DB'));
         let statusData = JSON.parse(localStorage.getItem('STATUS'));
         let searchData = [];
     
         // Define the fields to be included in the search
-        let searchFields = ["Lv", "必要素材", "防具", "防具分類"];
-    
-        // Split the keyword by space (both full-width and half-width) to get an array of keywords
-        let keywords = keyword.split(/[\s\u3000]/);
+        let searchFields = ["防具分類", "必要素材"];
+        let searchLvFields = ["Lv"];
     
         dbData.forEach(data => {
             // Only look at items that have not been enhanced
             if (statusData.some(status => status['防具Lv'] === data['防具Lv'] && status['強化済'] === 0)) {
-                // Check if each keyword is included in the searchFields of the document
-                let isAllKeywordsIncluded = keywords.every(kw => {
-                    return searchFields.some(field => data[field].toString().includes(kw));
+                
+                // Check if each category is included in the searchFields of the document
+                let isAnyCategoryIncluded = selectedCategories.some(cat => {
+                    return searchFields.some(field => data[field].toString() === cat);
                 });
     
-                // If all keywords are included, add the document to searchData
-                if (isAllKeywordsIncluded) {
+                // Check if the level is included in the searchFields of the document
+                let isAnyLevelIncluded = selectedLevels.some(cat => {
+                    return searchLvFields.some(field => data[field].toString() === cat);
+                });
+    
+                // Check if the keyword is included in the searchFields of the document
+                let isKeywordIncluded = searchFields.some(field => data[field].toString().includes(searchKeyword));
+    
+                // If any category is included or the level is included, add the document to searchData
+                if ((selectedCategories.length === 0 || isAnyCategoryIncluded) && (selectedLevels.length === 0 || isAnyLevelIncluded) && (searchKeyword === "" || isKeywordIncluded)) {
                     searchData.push(data);
                 }
             }
         });
+    
+        // Sort the data by the 'No.MT' field in ascending order
+        searchData.sort((a, b) => a["No."] - b["No."]);
     
         // Create a table with the search results
         createTable(searchData, 'DB', 'search-results-table');
@@ -299,8 +411,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // Get the quantity table element
         let quantityTable = document.getElementById('quantity-table');
     
-        // If the search keyword is empty, hide the quantity table
-        if (keyword === '') {
+        // If no category is selected and no keyword is entered, hide the quantity table
+        if (selectedCategories.length === 0 && selectedLevels.length === 0 && searchKeyword === "" ) {
             quantityTable.style.display = 'none';
         } else {
             quantityTable.style.display = 'table';
@@ -310,7 +422,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Add event listener to search input field
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        searchDB(e.target.value);
+        searchKeyword = e.target.value;
+        searchDB();
     });
 
     // Event Listener for Save button
@@ -334,14 +447,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     // Event Listener for Clear button
-    document.getElementById('clearBtn').addEventListener('click', function() {
-        let statusData = JSON.parse(localStorage.getItem('STATUS'));
-
-        statusData.forEach(row => {
-            row['強化済'] = 0;
-        });
-
-        localStorage.setItem('STATUS', JSON.stringify(statusData));
-        location.reload();
-    });
+    // document.getElementById('clearBtn').addEventListener('click', function() {
+    //     let statusData = JSON.parse(localStorage.getItem('STATUS'));
+    // 
+    //     statusData.forEach(row => {
+    //         row['強化済'] = 0;
+    //     });
+    // 
+    //     localStorage.setItem('STATUS', JSON.stringify(statusData));
+    //     location.reload();
+    // });
 });

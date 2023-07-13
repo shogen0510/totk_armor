@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
     background-color: #ffffff;
 }
 
@@ -16,7 +16,8 @@ body {
     margin-top: 20px;
 }
 
-#searchInput, #searchForm input[type="submit"] {
+#searchInput,
+#searchForm input[type="submit"] {
     margin: 5px;
     padding: 5px;
     font-size: 10px;
@@ -25,20 +26,21 @@ body {
 
 #app {
     width: 100%;
-    padding: 20px; /* add some padding to prevent content sticking to the edges */
+    padding: 20px;
     margin: auto;
     color: #333;
 }
 
-input[type="text"], button {
+input[type="text"],
+button {
     padding: 10px;
-    font-size: 10px; /* increase font size for better visibility */
+    font-size: 10px;
     margin: 10px 0;
     border-radius: 5px;
 }
 
 input[type="text"] {
-    width: calc(100% - 20px); /* accounting for padding */
+    width: calc(100% - 20px);
     border: 1px solid #ccc;
 }
 
@@ -46,14 +48,14 @@ button {
     width: 100%;
     border: none;
     color: white;
-    background-color: #0070c9; 
+    background-color: #0070c9;
     cursor: pointer;
     transition: background-color 0.3s ease;
     border-radius: 5px;
 }
 
 button:hover {
-    background-color: #005999; /* darken color on hover */
+    background-color: #005999;
 }
 
 table {
@@ -61,34 +63,26 @@ table {
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: #ececec; /* light gray */
-    color: #2c2c2c; /* dark gray */
+    background-color: #ececec;
+    color: #2c2c2c;
 }
 
-th, td {
+th,
+td {
     padding: 8px;
     text-align: left;
 }
 
 table th {
-    background-color: #2c2c2c; /* dark gray */
-    color: #ececec; /* light gray */
+    background-color: #2c2c2c;
+    color: #ececec;
 }
 
-/* チェックボックス自体を非表示にします */
 .styled-checkbox {
     display: none;
 }
 
-/* チェックボックスのコンテナをフレックスボックスにします */
-#status-table-lv-checkboxes {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    padding: 7px 2px 2px 7px;
-}
-
-/* チェックボックスのコンテナをフレックスボックスにします */
+#status-table-lv-checkboxes,
 #status-table-checkboxes {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -96,35 +90,40 @@ table th {
     padding: 7px 2px 2px 7px;
 }
 
-/* ラベルをボタンのようにスタイルします */
 .styled-checkbox + label {
-    width: 100%; 
-    color: #a0a0a0;
-    background-color: #fff;
-    text-align: center;
-    font-size: 10px;
-    line-height: 13px;
-    font-weight: 700;
-    opacity: 1;
-    margin-right: 2px; /* ラベル間の余白を狭く */
-    margin-bottom: 2px; /* ラベル間の余白を狭く */
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-/* チェックボックスがチェックされたときのラベルのスタイル */
 .styled-checkbox:checked + label {
     background: #444;
     color: #fff;
 }
 
-/* Extra small devices (phones) */
+.button-label {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    text-decoration: none;
+}
+
 @media only screen and (max-width: 600px) {
     table {
-      font-size: 12px;
+        font-size: 12px;
     }
 
     table th,
     table td {
-      padding: 4px;
+        padding: 4px;
     }
 }
 
@@ -134,31 +133,26 @@ a {
     color: #0070c9;
 }
 
-/* Small devices (portrait tablets and large phones) */
 @media only screen and (min-width: 600px) {
     #app {
         max-width: 600px;
     }
 }
 
-/* Medium devices (landscape tablets) */
 @media only screen and (min-width: 768px) {
     #app {
         max-width: 768px;
     }
 }
 
-/* Large devices (laptops/desktops) */
 @media only screen and (min-width: 992px) {
     #app {
         max-width: 992px;
     }
 }
 
-/* Extra large devices (large laptops and desktops) */
 @media only screen and (min-width: 1200px) {
     #app {
         max-width: 1200px;
     }
 }
-

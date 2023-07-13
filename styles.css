@@ -92,11 +92,12 @@ table th {
 
 .styled-checkbox + label {
     display: inline-block;
-    padding: 0.5em 1em;
-    background-color: #4CAF50;
+    padding: 2px 2px;
+    background-color: #444;
     color: white;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 10px;
 }
 
 .styled-checkbox:checked + label {
@@ -106,7 +107,7 @@ table th {
 
 .button-label {
     display: inline-block;
-    padding: 0.5em 1em;
+    padding: 2px 2px;
     background-color: #444;
     color: white;
     border-radius: 4px;
